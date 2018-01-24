@@ -1,0 +1,23 @@
+{
+  "name": "anylabel",
+  "version": "0.1.0",
+  "description": "A label tool for deep learning",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development parcel index.html",
+    "prod": "corss-env NODE_ENV=production parcel build index.html --no-minify"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-vue": "^2.0.0",
+    "cross-env": "^5.1.3",
+    "electron": "^1.7.11",
+    "parcel-bundler": "^1.5.0"
+  },
+  "dependencies": {
+    "vue": "^2.5.13",
+    "vuex": "^3.0.1"
+  }
+}
