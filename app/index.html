@@ -3,6 +3,12 @@
 
 <head>
   <title>Welcome to Vue</title>
+  <script>
+    window.nodeRequire = require;
+    delete window.require;
+    delete window.exports;
+    delete window.module;
+  </script>
 </head>
 
 <body>

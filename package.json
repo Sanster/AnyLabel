@@ -4,10 +4,10 @@
   "description": "A label tool for deep learning",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "cross-env NODE_ENV=development electron .",
     "dev": "cross-env NODE_ENV=development parcel app/index.html",
     "prod":
-      "corss-env NODE_ENV=production parcel build app/index.html --no-minify"
+      "cross-env NODE_ENV=production parcel build app/index.html --no-minify --public-url=."
   },
   "engines": {
     "node": "9.4.0"

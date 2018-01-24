@@ -1,13 +1,10 @@
 const path = require('path')
-const glob = require('glob')
 const electron = require('electron')
 
 const BrowserWindow = electron.BrowserWindow
 const app = electron.app
 
-const debug = /--debug/.test(process.argv[2])
-
-if (process.mas) app.setName('Electron APIs')
+const debug = /development/.test(process.env.NODE_ENV)
 
 var mainWindow = null
 
@@ -24,7 +21,12 @@ function initialize() {
     }
 
     mainWindow = new BrowserWindow(windowOptions)
-    mainWindow.loadURL('http://localhost:1234')
+
+    if (debug) {
+      mainWindow.loadURL('http://localhost:1234')
+    } else {
+      mainWindow.loadURL(path.join('file://', __dirname, 'dist/index.html'))
+    }
 
     mainWindow.on('closed', function() {
       mainWindow = null
