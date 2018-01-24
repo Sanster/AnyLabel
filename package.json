@@ -2,10 +2,15 @@
   "name": "anylabel",
   "version": "0.1.0",
   "description": "A label tool for deep learning",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development parcel index.html",
-    "prod": "corss-env NODE_ENV=production parcel build index.html --no-minify"
+    "start": "electron .",
+    "dev": "cross-env NODE_ENV=development parcel app/index.html",
+    "prod":
+      "corss-env NODE_ENV=production parcel build app/index.html --no-minify"
+  },
+  "engines": {
+    "node": "9.4.0"
   },
   "author": "",
   "license": "MIT",
