@@ -6,23 +6,23 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development electron .",
     "dev": "cross-env NODE_ENV=development parcel app/index.html",
-    "prod":
-      "cross-env NODE_ENV=production parcel build app/index.html --no-minify --public-url=."
+    "prod": "cross-env NODE_ENV=production parcel build app/index.html --no-minify --public-url ."
   },
   "engines": {
-    "node": "9.4.0"
+    "node": ">9.0.0"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "babel-preset-env": "^1.6.1",
-    "babel-preset-vue": "^2.0.0",
+    "babel-preset-react": "^6.24.1",
     "cross-env": "^5.1.3",
     "electron": "^1.7.11",
+    "node-sass": "^4.7.2",
     "parcel-bundler": "^1.5.0"
   },
   "dependencies": {
-    "vue": "^2.5.13",
-    "vuex": "^3.0.1"
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   }
 }

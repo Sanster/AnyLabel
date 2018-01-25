@@ -1,15 +1,16 @@
-import Vue from 'vue/dist/vue'
-import './index.css'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.scss';
 
-new Vue({
-  el: '#app',
-  template: `
-    <div id="app">
-      <h1>Hello World</h1>
-    </div>
-  `
-})
+const App = () => (
+  <div className="App">
+    <h1 className="App-Title">Hello Parcel x React</h1>
+  </div>
+);
 
+ReactDOM.render(<App />, document.getElementById('root'));
+
+// Hot Module Replacement
 if (module.hot) {
-  module.hot.accept()
+  module.hot.accept();
 }

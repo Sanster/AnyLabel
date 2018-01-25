@@ -1,3 +1,6 @@
 {
-  "presets": ["env", "vue"]
+  "presets": [
+    "env",
+    "react"
+  ]
 }
