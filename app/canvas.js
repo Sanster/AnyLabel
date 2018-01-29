@@ -2,101 +2,111 @@ import React from 'react'
 import { setTimeout } from 'timers'
 import testPng from './assets/test.png'
 
+class Rect {
+  constructor(x1, y1, x2, y2) {
+    this.x1 = x1
+    this.y1 = y1
+    this.x2 = x2
+    this.y2 = y2
+  }
+
+  width() {
+    return x2 - x1
+  }
+
+  height() {
+    return y2 - y1
+  }
+}
+
+class Point {
+  constructor(x, y) {
+    this.x = x
+    this.y = y
+  }
+}
+
 class Canvas extends React.Component {
   componentDidMount() {
     this.ctx = this.refs.canvas.getContext('2d')
-    this.updateCanvas()
-    this.offset = 0
+    this.ctx.strokeStyle = 'rgb(0,255,0)'
+    this.width = this.refs.canvas.width
+    this.height = this.refs.canvas.height
+    this.drawImg()
+    this.rects = []
+    this.isDrawing = false
+    this.img = null
+  }
+
+  // show image in canvas center
+  drawImg() {
+    if (this.img == null) {
+      console.log('create new image')
+      const img = new Image()
+      img.onload = () => {
+        const dx = (this.width - img.width) / 2
+        const dy = (this.height - img.height) / 2
+        this.ctx.drawImage(img, dx, dy)
+        // this line must put in img.onload callback to prevent image load twice
+        this.img = img
+      }
+      img.src = new URL('file:///Users/cwq/Github/AnyLabel/app/assets/test.png')
+    } else {
+      const dx = (this.width - this.img.width) / 2
+      const dy = (this.height - this.img.height) / 2
+      this.ctx.drawImage(this.img, dx, dy)
+    }
   }
 
   updateCanvas() {
-    this.ctx.fillStyle = 'rgb(200,0,0)'
-    this.ctx.fillRect(0, 0, 100, 100)
-    this.ctx.clearRect(25, 25, 50, 50)
-
-    this.ctx.strokeStyle = 'rgb(0,255,0)'
     this.ctx.strokeRect(100, 100, 100, 100)
-
-    this.ctx.beginPath()
-    this.ctx.moveTo(200, 200)
-    this.ctx.lineTo(100, 200)
-    this.ctx.lineTo(100, 100)
-    this.ctx.fill()
-
-    this.ctx.strokeStyle = 'rgb(0,0,255)'
-    this.ctx.beginPath()
-    this.ctx.arc(200, 200, 50, 0, Math.PI / 2, false)
-    this.ctx.arc(50, 100, 50, 0, 10)
-    this.ctx.stroke()
-
-    this.ctx.beginPath()
-    this.ctx.rect(200, 100, 50, 50)
-    this.ctx.stroke()
-
-    const rect = new Path2D()
-    rect.rect(200, 0, 50, 50)
-    this.ctx.stroke(rect)
-
-    this.ctx.fill(rect)
-    // for (var i = 0; i < 6; i++) {
-    //   for (var j = 0; j < 6; j++) {
-    //     this.ctx.fillStyle = `rgb(${Math.floor(255 - 22.5 * i)},${Math.floor(
-    //       255 - 42.5 * j
-    //     )},0)`
-    //     this.ctx.fillRect(j * 25, i * 25, 25, 25)
-    //   }
-    // }
-
-    // for (var i = 0; i < 6; i++) {
-    //   for (var j = 0; j < 6; j++) {
-    //     this.ctx.strokeStyle =
-    //       'rgb(0, ' +
-    //       Math.floor(255 - 42.5 * i) +
-    //       ', ' +
-    //       Math.floor(255 - 42.5 * j) +
-    //       ')'
-    //     this.ctx.beginPath()
-    //     this.ctx.arc(12.5 + j * 25, 12.5 + i * 25, 10, 0, Math.PI * 2, true)
-    //     this.ctx.stroke()
-    //   }
-    // }
-
-    // this.march()
-
-    this.ctx.font = '48px serif'
-    this.ctx.fillText('Hello world', 200, 200)
-
-    var img = new Image()
-    img.onload = () => {
-      this.ctx.drawImage(img, 0, 0, 200, 200)
-      this.ctx.beginPath()
-      this.ctx.moveTo(30, 96)
-      this.ctx.lineTo(70, 66)
-      this.ctx.lineTo(103, 76)
-      this.ctx.lineTo(170, 15)
-      this.ctx.stroke()
-    }
-    img.src = testPng
   }
 
-  drawDash() {
-    this.ctx.clearRect(0, 0, 300, 300)
-    this.ctx.setLineDash([4, 2])
-    this.ctx.lineDashOffset = -this.offset
-    this.ctx.strokeRect(10, 10, 100, 100)
+  handleMouseDown(e) {
+    console.log(
+      `mouse down x: ${e.nativeEvent.offsetX} y: ${e.nativeEvent.offsetY}`
+    )
+
+    if (this.isDrawing == false) {
+      this.isDrawing = true
+      this.mouseDownPoint = this.getPoint(e)
+    }
   }
 
-  march() {
-    this.offset++
-    if (this.offset > 16) {
-      this.offset = 0
+  handleMouseMove(e) {
+    console.log('mouse move')
+    if (this.isDrawing) {
+      this.ctx.clearRect(0, 0, this.width, this.height)
+      this.drawImg()
+      this.drawRect(this.mouseDownPoint, this.getPoint(e))
     }
-    this.drawDash()
-    setTimeout(this.march.bind(this), 20)
+  }
+
+  handleMouseUp(e) {
+    console.log('mouse up')
+    this.isDrawing = false
+  }
+
+  getPoint(e) {
+    return new Point(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+  }
+
+  drawRect(p1, p2) {
+    this.ctx.strokeRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y)
   }
 
   render() {
-    return <canvas id="canvas" ref="canvas" width={300} height={300} />
+    return (
+      <canvas
+        id="canvas"
+        ref="canvas"
+        width={600}
+        height={600}
+        onMouseDown={e => this.handleMouseDown(e)}
+        onMouseMove={e => this.handleMouseMove(e)}
+        onMouseUp={e => this.handleMouseUp(e)}
+      />
+    )
   }
 }
 
