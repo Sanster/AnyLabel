@@ -17,7 +17,11 @@ function initialize() {
       width: 1080,
       minWidth: 680,
       height: 840,
-      title: app.getName()
+      title: app.getName(),
+      // To load local image file
+      webPreferences: {
+        webSecurity: false
+      }
     }
 
     mainWindow = new BrowserWindow(windowOptions)
