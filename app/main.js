@@ -1,9 +1,9 @@
-const path = require("path")
-const electron = require("electron")
+const path = require('path')
+const electron = require('electron')
 const {
   default: installExtension,
   REACT_DEVELOPER_TOOLS
-} = require("electron-devtools-installer")
+} = require('electron-devtools-installer')
 
 const BrowserWindow = electron.BrowserWindow
 const app = electron.app
@@ -31,30 +31,30 @@ function initialize() {
     mainWindow = new BrowserWindow(windowOptions)
 
     if (debug) {
-      mainWindow.loadURL("http://localhost:1234")
+      mainWindow.loadURL('http://localhost:1234')
       installExtension(REACT_DEVELOPER_TOOLS)
         .then(name => console.log(`Added Extension:  ${name}`))
-        .catch(err => console.log("An error occurred: ", err))
+        .catch(err => console.log('An error occurred: ', err))
     } else {
-      mainWindow.loadURL(path.join("file://", __dirname, "dist/index.html"))
+      mainWindow.loadURL(path.join('file://', __dirname, 'dist/index.html'))
     }
 
-    mainWindow.on("closed", function() {
+    mainWindow.on('closed', function() {
       mainWindow = null
     })
   }
 
-  app.on("ready", function() {
+  app.on('ready', function() {
     createWindow()
   })
 
-  app.on("window-all-closed", function() {
-    if (process.platform !== "darwin") {
+  app.on('window-all-closed', function() {
+    if (process.platform !== 'darwin') {
       app.quit()
     }
   })
 
-  app.on("activate", function() {
+  app.on('activate', function() {
     if (mainWindow === null) {
       createWindow()
     }

@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Canvas from './canvas.js'
-import './index.scss'
+import Canvas from './components/canvas.js'
+import './styles/index.scss'
 
 const App = () => (
   <div className="App">

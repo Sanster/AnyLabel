@@ -2,11 +2,12 @@
   "name": "anylabel",
   "version": "0.1.0",
   "description": "A label tool for deep learning",
-  "main": "main.js",
+  "main": "app/main.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development electron .",
     "dev": "cross-env NODE_ENV=development parcel app/index.html",
-    "prod": "cross-env NODE_ENV=production parcel build app/index.html --no-minify --public-url ."
+    "prod":
+      "cross-env NODE_ENV=production parcel build app/index.html --no-minify --public-url ."
   },
   "engines": {
     "node": ">9.0.0"
