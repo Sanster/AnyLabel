@@ -3,9 +3,12 @@
 
 <head>
   <script>
+    window.nodeRequire = require;
     delete window.require;
     delete window.exports;
     delete window.module;
+    // see: https://github.com/parcel-bundler/parcel/issues/474
+    const electron = nodeRequire('electron').remote;
   </script>
 </head>
 
