@@ -1,5 +1,11 @@
+const walker = electron.require('./main_thread/walker')
+
 class Local {
-  static openDir(cb) {
+  constructor() {
+    this.walker = walker
+  }
+
+  openDir(cb) {
     electron.dialog.showOpenDialog(
       {
         properties: ['openDirectory']
@@ -13,4 +19,5 @@ class Local {
   }
 }
 
-export default Local
+// TODO: check if import in different file is same instance
+export default new Local()

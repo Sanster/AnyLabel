@@ -4,6 +4,7 @@
   "description": "A label tool for deep learning",
   "main": "app/main.js",
   "scripts": {
+    "test": "cd app && mocha --timeout 30s",
     "start": "cross-env NODE_ENV=development electron .",
     "dev": "cross-env NODE_ENV=development parcel app/index.html",
     "prod":
@@ -20,11 +21,13 @@
     "cross-env": "^5.1.3",
     "electron": "^1.7.11",
     "electron-devtools-installer": "^2.2.3",
+    "mocha": "^5.0.0",
     "node-sass": "^4.7.2",
     "parcel-bundler": "^1.5.0"
   },
   "dependencies": {
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "xml2js": "^0.4.19"
   }
 }

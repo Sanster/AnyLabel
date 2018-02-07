@@ -27,7 +27,7 @@ class Canvas extends React.Component {
         // this line must put in img.onload callback to prevent image load twice
         this.img = img
       }
-      img.src = new URL('file://./assets/test.png')
+      //   img.src = new URL('file://./assets/test.png')
     } else {
       const dx = (this.width - this.img.width) / 2
       const dy = (this.height - this.img.height) / 2

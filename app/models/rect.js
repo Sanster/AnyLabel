@@ -15,4 +15,4 @@ class Rect {
   }
 }
 
-export default Rect
+module.exports = Rect
