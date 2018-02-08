@@ -19,6 +19,10 @@ class Canvas extends React.Component {
         this.drawImg(props.bg)
     }
 
+    _clear() {
+        this.ctx.clearRect(0, 0, this.width, this.height)
+    }
+
     // show image in canvas center
     drawImg(imPath) {
         if (this.img == null || imPath != this.imPath) {
@@ -32,6 +36,7 @@ class Canvas extends React.Component {
                 // this line must put in img.onload callback to prevent image load twice
                 this.img = img
             }
+            this._clear()
             img.src = new URL('file://' + imPath)
         } else {
             const dx = (this.width - this.img.width) / 2
@@ -58,7 +63,7 @@ class Canvas extends React.Component {
     handleMouseMove(e) {
         console.log('mouse move')
         if (this.isDrawing) {
-            this.ctx.clearRect(0, 0, this.width, this.height)
+            this._clear()
             this.drawImg()
             this.drawRect(this.mouseDownPoint, this.getPoint(e))
         }
