@@ -15,9 +15,10 @@ class VocDb {
     load(vocDir) {
         this.vocDir = vocDir
         const annosDir = pj(vocDir, 'Annotations')
-        const imSetsDir = pj(vocDir, 'ImageSets')
-        this._loadAnnosSync(annosDir)
-        this._loadImSetsSync(imSetsDir)
+        const imSetsDir = pj(vocDir, 'ImageSets', 'Main')
+        this.imsDir = pg(vocDir, 'JPEGImages')
+        this._loadAnnos(annosDir)
+        this._loadImSets(imSetsDir)
     }
 
     _loadAnnos(annosDir, done) {
@@ -49,7 +50,15 @@ class VocDb {
                 console.error(err)
             } else {
                 files.forEach(filename => {
-                    const filepath = path.join(rootDir, filename)
+                    const setName = filename.substring(0, filename.length - 4)
+                    const filepath = pj(imSetsDir, filename)
+                    const data = fs.readFileSync(filepath, 'utf-8')
+
+                    this.imSets[setName] = []
+                    const lines = data.split('\n')
+                    for (let line of lines) {
+                        this.imSets[setName].push(line)
+                    }
                 })
             }
         })

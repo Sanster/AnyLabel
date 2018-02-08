@@ -7,7 +7,7 @@ const VocAnno = require('../models/voc_anno')
 describe('vocdb', () => {
     const vocDir = pj(__dirname, 'VOC')
     const annosDir = pj(vocDir, 'Annotations')
-    const imSetsDir = pj(vocDir, 'ImageSets')
+    const imSetsDir = pj(vocDir, 'ImageSets', 'Main')
     const imDir = pj(vocDir, 'JPEGImages')
 
     const timer = new Timer()
@@ -18,6 +18,13 @@ describe('vocdb', () => {
             assert.equal(vocAnno.objs.length, 2)
             assert.equal(vocAnno.objs[0].name, 'dog')
             assert.equal(vocAnno.objs[1].name, 'person')
+        })
+    })
+
+    describe('#_loadImSets', () => {
+        it('should load all image sets', () => {
+            const vocdb = new VocDb()
+            vocdb._loadImSets(imSetsDir)
         })
     })
 
