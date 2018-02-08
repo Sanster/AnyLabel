@@ -24,7 +24,10 @@ describe('vocdb', () => {
     describe('#_loadImSets', () => {
         it('should load all image sets', () => {
             const vocdb = new VocDb(vocDir)
-            vocdb._loadImSets(imSetsDir)
+            vocdb._loadImSets(imSetsDir, done => {
+                assert.equal(vocdb.imSets.size, 4)
+                done()
+            })
         })
     })
 

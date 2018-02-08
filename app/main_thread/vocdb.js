@@ -2,6 +2,7 @@ const fs = require('fs')
 const xml2js = require('xml2js')
 const pj = require('path').join
 const VocAnno = require('../models/voc_anno')
+const { runcb } = require('../libs/utils')
 
 class VocDb {
     constructor(vocDir) {
@@ -9,6 +10,7 @@ class VocDb {
         this._parser2 = new xml2js.Parser({ async: true })
         this.annos = new Map()
         this.imSets = new Map()
+        this.totalIms = 0
 
         this.vocDir = vocDir
         this.annosDir = pj(vocDir, 'Annotations')
@@ -17,9 +19,14 @@ class VocDb {
     }
 
     // load metadata from and Annotations, ImageSets
-    load() {
-        this._loadAnnos(this.annosDir)
-        this._loadImSets(this.imSetsDir)
+    // TODO: make async await work for _loadAnno
+    async load(done) {
+        await this._loadAnnos(this.annosDir)
+        console.info("VOC annos loaded.")
+        await this._loadImSets(this.imSetsDir)
+        console.info("VOC imSets loaded.")
+        console.info("VOC data loaded.")
+        runcb(done)
     }
 
     getImPath(imName) {
@@ -41,7 +48,7 @@ class VocDb {
                 this.annos.set(imName, anno)
                 count += 1
                 if (count === array.length) {
-                    done()
+                    runcb(done)
                 }
             })
         })
@@ -55,7 +62,7 @@ class VocDb {
         })
     }
 
-    _loadImSets(imSetsDir) {
+    _loadImSets(imSetsDir, cb) {
         fs.readdir(imSetsDir, (err, files) => {
             if (err) {
                 console.error(err)
@@ -70,7 +77,12 @@ class VocDb {
                     for (let line of lines) {
                         this.imSets[setName].push(line)
                     }
+
+                    if (setName === 'trainval') {
+                        this.totalIms = this.imSets[setName].length
+                    }
                 })
+                runcb(cb)
             }
         })
     }

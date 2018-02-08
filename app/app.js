@@ -2,46 +2,65 @@ import React from 'react'
 import Canvas from './components/canvas'
 import Button from './components/button'
 import Local from './libs/local'
+const VocDb = electron.require('./main_thread/vocdb')
 
 class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.count = 0
+    constructor(props) {
+        super(props)
+        this.count = 0
+        this.vocdb = null
 
-    this.state = {
-      count: 0
-    }
-  }
-
-  componentDidMount() {
-    this.workingDir = '/Users/cwq/Documents/bioack/facenet/lfw/raw'
-  }
-
-  updateCount() {
-    this.setState({ count: this.count })
-  }
-
-  chooseImgDir() {
-    Local.openDir(path => {
-      Local.walker.readImgFiles(path, filepath => {
-        this.count += 1
-        if (this.count % 10 == 0) {
-          this.updateCount()
+        this.state = {
+            count: 0,
+            index: -1
         }
-      })
-    })
-  }
+    }
 
-  render() {
-    return (
-      <div className="App">
-        <Button onClick={() => this.chooseImgDir()}> Open dir </Button>
-        <Button onClick={this.chooseImgDir}> Next </Button>
-        <h4>{this.state.count}</h4>
-        <Canvas />
-      </div>
-    )
-  }
+    componentDidMount() {
+        this.workingDir = '/Users/cwq/Documents/bioack/facenet/lfw/raw'
+    }
+
+    updateCount() {
+        this.setState({ count: this.count })
+    }
+
+    chooseVOCDir() {
+        Local.openDir(path => {
+            this.vocdb = new VocDb(path)
+            this.vocdb.load(() => {
+                this.showNext()
+            })
+        })
+    }
+
+    showNext() {
+        const index = this.state.index
+        this.setState({ index: index + 1 })
+    }
+
+    showPrev() {
+        const index = this.state.index
+        this.setState({ index: index - 1 })
+    }
+
+    render() {
+        const { index } = this.state
+        let imPath = ''
+        if (this.vocdb != null) {
+            const imName = this.vocdb.imSets['trainval'][index]
+            imPath = this.vocdb.getImPath(imName)
+        }
+
+        return (
+            <div className="App">
+                <Button onClick={() => this.chooseVOCDir()}> Open dir </Button>
+                <Button onClick={() => this.showNext()}> Prev </Button>
+                <Button onClick={() => this.showPrev()}> Next </Button>
+                <h4>{this.state.count}</h4>
+                <Canvas bg={imPath} />
+            </div>
+        )
+    }
 }
 
 export default App
