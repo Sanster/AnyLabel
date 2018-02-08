@@ -4,21 +4,30 @@ const pj = require('path').join
 const VocAnno = require('../models/voc_anno')
 
 class VocDb {
-    constructor() {
+    constructor(vocDir) {
         this._parser = new xml2js.Parser()
         this._parser2 = new xml2js.Parser({ async: true })
         this.annos = new Map()
         this.imSets = new Map()
+
+        this.vocDir = vocDir
+        this.annosDir = pj(vocDir, 'Annotations')
+        this.imSetsDir = pj(vocDir, 'ImageSets', 'Main')
+        this.imsDir = pj(vocDir, 'JPEGImages')
     }
 
     // load metadata from and Annotations, ImageSets
-    load(vocDir) {
-        this.vocDir = vocDir
-        const annosDir = pj(vocDir, 'Annotations')
-        const imSetsDir = pj(vocDir, 'ImageSets', 'Main')
-        this.imsDir = pg(vocDir, 'JPEGImages')
-        this._loadAnnos(annosDir)
-        this._loadImSets(imSetsDir)
+    load() {
+        this._loadAnnos(this.annosDir)
+        this._loadImSets(this.imSetsDir)
+    }
+
+    getImPath(imName) {
+        return pj(this.imsDir, imName + ".jpg")
+    }
+
+    _getBaseName(filename) {
+        return filename.substring(0, filename.length - 4)
     }
 
     _loadAnnos(annosDir, done) {
@@ -27,7 +36,9 @@ class VocDb {
             files.forEach(async (fname, index, array) => {
                 const fpath = pj(annosDir, fname)
                 const anno = await this._loadAnnoXml(fpath)
-                this.annos.set(fname, anno)
+
+                const imName = this._getBaseName(fname)
+                this.annos.set(imName, anno)
                 count += 1
                 if (count === array.length) {
                     done()
@@ -49,11 +60,11 @@ class VocDb {
             if (err) {
                 console.error(err)
             } else {
-                files.forEach(filename => {
-                    const setName = filename.substring(0, filename.length - 4)
-                    const filepath = pj(imSetsDir, filename)
+                files.forEach(fname => {
+                    const filepath = pj(imSetsDir, fname)
                     const data = fs.readFileSync(filepath, 'utf-8')
 
+                    const setName = this._getBaseName(fname)
                     this.imSets[setName] = []
                     const lines = data.split('\n')
                     for (let line of lines) {

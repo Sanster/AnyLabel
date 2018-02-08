@@ -13,7 +13,7 @@ describe('vocdb', () => {
     const timer = new Timer()
     describe('#_loadAnnoXmlSync', () => {
         it('should parse data correctly in voc xml file', () => {
-            const vocdb = new VocDb()
+            const vocdb = new VocDb(vocDir)
             const vocAnno = vocdb._loadAnnoXmlSync(pj(annosDir, './img_1001.xml'))
             assert.equal(vocAnno.objs.length, 2)
             assert.equal(vocAnno.objs[0].name, 'dog')
@@ -23,14 +23,22 @@ describe('vocdb', () => {
 
     describe('#_loadImSets', () => {
         it('should load all image sets', () => {
-            const vocdb = new VocDb()
+            const vocdb = new VocDb(vocDir)
             vocdb._loadImSets(imSetsDir)
         })
     })
 
+    describe('#getImPath', () => {
+        it('should get image path by image name', () => {
+            const vocdb = new VocDb(vocDir)
+            assert.equal(vocdb.getImPath('img_1001'), pj(imDir, 'img_1001.jpg'))
+        })
+    })
+
+
     describe('#_loadAnnosSync', () => {
         it('should load annos sync', () => {
-            const vocdb = new VocDb()
+            const vocdb = new VocDb(vocDir)
             timer.tic()
             vocdb._loadAnnosSync("/Users/cwq/Documents/bioack/data/VOCdevkit/VOC2007/Annotations")
             assert.equal(vocdb.annos.size, 6000)
@@ -40,7 +48,7 @@ describe('vocdb', () => {
 
     describe('#_loadAnnos', () => {
         it('should load annos', done => {
-            const vocdb = new VocDb()
+            const vocdb = new VocDb(vocDir)
             timer.tic()
             vocdb._loadAnnos("/Users/cwq/Documents/bioack/data/VOCdevkit/VOC2007/Annotations", () => {
                 assert.equal(vocdb.annos.size, 6000)
