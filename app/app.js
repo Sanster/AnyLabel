@@ -2,6 +2,7 @@ import React from 'react'
 import Canvas from './components/canvas'
 import Button from './components/button'
 import Local from './libs/local'
+import Logger from './libs/logger'
 const VocDb = electron.require('./main_thread/vocdb')
 
 class App extends React.Component {
@@ -28,6 +29,7 @@ class App extends React.Component {
         Local.openDir(path => {
             this.vocdb = new VocDb(path)
             this.vocdb.load(() => {
+                Logger.debug("Voc Data Load finish")
                 this.showNext()
             })
         })
@@ -47,8 +49,7 @@ class App extends React.Component {
         const { index } = this.state
         let imPath = ''
         if (this.vocdb != null) {
-            const imName = this.vocdb.imSets['trainval'][index]
-            imPath = this.vocdb.getImPath(imName)
+            imPath = this.vocdb.getImPath('trainval', index)
         }
 
         return (

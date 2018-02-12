@@ -2,6 +2,7 @@ import React from 'react'
 import { setTimeout } from 'timers'
 import Rect from '../models/rect'
 import Point from '../models/point'
+import Logger from '../libs/logger'
 
 class Canvas extends React.Component {
     componentDidMount() {
@@ -27,7 +28,7 @@ class Canvas extends React.Component {
     drawImg(imPath) {
         if (this.img == null || imPath != this.imPath) {
             this.imPath = imPath
-            console.log('create new image')
+            Logger.debug(`Load image: ${imPath}`)
             const img = new Image()
             img.onload = () => {
                 const dx = (this.width - img.width) / 2
@@ -61,7 +62,6 @@ class Canvas extends React.Component {
     }
 
     handleMouseMove(e) {
-        console.log('mouse move')
         if (this.isDrawing) {
             this._clear()
             this.drawImg()

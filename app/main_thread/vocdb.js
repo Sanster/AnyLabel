@@ -3,6 +3,7 @@ const xml2js = require('xml2js')
 const pj = require('path').join
 const VocAnno = require('../models/voc_anno')
 const { runcb } = require('../libs/utils')
+const Logger = require('../libs/logger')
 
 class VocDb {
     constructor(vocDir) {
@@ -19,18 +20,24 @@ class VocDb {
     }
 
     // load metadata from and Annotations, ImageSets
-    // TODO: make async await work for _loadAnno
     async load(done) {
         await this._loadAnnos(this.annosDir)
-        console.info("VOC annos loaded.")
         await this._loadImSets(this.imSetsDir)
-        console.info("VOC imSets loaded.")
-        console.info("VOC data loaded.")
         runcb(done)
+    }
+
+    getImSet(setName) {
+        return this.imSets.get(setName)
     }
 
     getImPath(imName) {
         return pj(this.imsDir, imName + ".jpg")
+    }
+
+    getImPath(setName, index) {
+        const imName = this.getImSet('trainval')[index]
+        imPath = this.getImPath(imName)
+        return imPath
     }
 
     _getBaseName(filename) {
@@ -48,6 +55,7 @@ class VocDb {
                 this.annos.set(imName, anno)
                 count += 1
                 if (count === array.length) {
+                    Logger.debug(`VOC annos loaded: ${this.annos.size}`)
                     runcb(done)
                 }
             })
@@ -62,27 +70,38 @@ class VocDb {
         })
     }
 
-    _loadImSets(imSetsDir, cb) {
+    _loadImSets(imSetsDir, done) {
         fs.readdir(imSetsDir, (err, files) => {
             if (err) {
                 console.error(err)
             } else {
-                files.forEach(fname => {
+                let count = 0
+                files.forEach((fname, index, array) => {
                     const filepath = pj(imSetsDir, fname)
-                    const data = fs.readFileSync(filepath, 'utf-8')
+                    fs.readFile(filepath, 'utf-8', (err, data) => {
+                        const setName = this._getBaseName(fname)
+                        this.imSets.set(setName, [])
+                        const lines = data.split('\n')
+                        for (let line of lines) {
+                            if (line != '') {
+                                this.imSets.get(setName).push(line)
+                            }
+                        }
 
-                    const setName = this._getBaseName(fname)
-                    this.imSets[setName] = []
-                    const lines = data.split('\n')
-                    for (let line of lines) {
-                        this.imSets[setName].push(line)
-                    }
+                        if (setName === 'trainval') {
+                            this.totalIms = this.imSets.get(setName).length
+                        }
 
-                    if (setName === 'trainval') {
-                        this.totalIms = this.imSets[setName].length
-                    }
+                        count += 1
+                        if (count === array.length) {
+                            Logger.debug(`VOC imSets loaded: ${this.imSets.size} set`)
+                            this.imSets.forEach((value, key, map) => {
+                                Logger.debug(`Set name: ${key} Size: ${value.length}`)
+                            })
+                            runcb(done)
+                        }
+                    })
                 })
-                runcb(cb)
             }
         })
     }
