@@ -6,11 +6,11 @@ import Logger from '../libs/logger'
 
 class Canvas extends React.Component {
   componentDidMount() {
+    console.log('componentDidMount')
     this.IM_MAX_WIDTH = 980
     this.IM_MAX_HEIGHT = 600
 
     this.ctx = this.refs.canvas.getContext('2d')
-    this.ctx.strokeStyle = 'rgb(0,255,0)'
     this.rects = []
     this.isDrawing = false
     this.img = null
@@ -21,6 +21,7 @@ class Canvas extends React.Component {
   }
 
   componentWillReceiveProps(props) {
+    console.log('componentWillReceiveProps')
     this.updateCanvas(props.bg, props.anno)
   }
 
@@ -54,6 +55,10 @@ class Canvas extends React.Component {
 
     this.refs.canvas.width = this.sWidth
     this.refs.canvas.height = this.sHeight
+
+    // We should get new context after set width and height
+    this.ctx = this.refs.canvas.getContext('2d')
+    this.ctx.strokeStyle = 'rgb(0,255,0)'
   }
 
   _onImgLoad(img, anno) {
