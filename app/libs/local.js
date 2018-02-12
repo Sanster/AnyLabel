@@ -1,4 +1,4 @@
-const walker = electron.require('./main_thread/walker')
+const walker = remote.require('./main_thread/walker')
 
 class Local {
     constructor() {
@@ -6,7 +6,7 @@ class Local {
     }
 
     openDir(cb) {
-        electron.dialog.showOpenDialog(
+        remote.dialog.showOpenDialog(
             {
                 properties: ['openDirectory']
             },

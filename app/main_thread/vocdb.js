@@ -4,14 +4,12 @@ const pj = require('path').join
 const VocAnno = require('../models/voc_anno')
 const { runcb } = require('../libs/utils')
 const Logger = require('../libs/logger')
+const util = require('util')
 
 class VocDb {
     constructor(vocDir) {
         this._parser = new xml2js.Parser()
-        this._parser2 = new xml2js.Parser({ async: true })
-        this.annos = new Map()
-        this.imSets = new Map()
-        this.totalIms = 0
+        this._init()
 
         this.vocDir = vocDir
         this.annosDir = pj(vocDir, 'Annotations')
@@ -19,25 +17,45 @@ class VocDb {
         this.imsDir = pj(vocDir, 'JPEGImages')
     }
 
+    _init() {
+        if (this.annos != null) {
+            this.annos.clear()
+        } else {
+            this.annos = new Map()
+        }
+
+        if (this.imSets != null) {
+            this.imSets.clear()
+        } else {
+            this.imSets = new Map()
+        }
+
+        this.annosLoaded = false
+        this.imSetsLoaded = false
+        this.totalIms = 0
+    }
+
     // load metadata from and Annotations, ImageSets
-    async load(done) {
-        await this._loadAnnos(this.annosDir)
-        await this._loadImSets(this.imSetsDir)
-        runcb(done)
+    load(done) {
+        this.annosLoaded = false
+        this.imSetsLoaded = false
+
+        this._loadAnnos(this.annosDir, done)
+        this._loadImSets(this.imSetsDir, done)
     }
 
     getImSet(setName) {
         return this.imSets.get(setName)
     }
 
-    getImPath(imName) {
+    getImPath(setName, index) {
+        const imName = this.getImSet(setName)[index]
         return pj(this.imsDir, imName + ".jpg")
     }
 
-    getImPath(setName, index) {
-        const imName = this.getImSet('trainval')[index]
-        imPath = this.getImPath(imName)
-        return imPath
+    getAnno(setName, index) {
+        const imName = this.getImSet(setName)[index]
+        return this.annos.get(imName)
     }
 
     _getBaseName(filename) {
@@ -47,17 +65,21 @@ class VocDb {
     _loadAnnos(annosDir, done) {
         fs.readdir(annosDir, (err, files) => {
             var count = 0
-            files.forEach(async (fname, index, array) => {
+            files.forEach((fname, index, array) => {
                 const fpath = pj(annosDir, fname)
-                const anno = await this._loadAnnoXml(fpath)
-
-                const imName = this._getBaseName(fname)
-                this.annos.set(imName, anno)
-                count += 1
-                if (count === array.length) {
-                    Logger.debug(`VOC annos loaded: ${this.annos.size}`)
-                    runcb(done)
-                }
+                this._loadAnnoXml(fpath, anno => {
+                    const imName = this._getBaseName(fname)
+                    this.annos.set(imName, anno)
+                    count += 1
+                    if (count === array.length) {
+                        this.annosLoaded = true
+                        Logger.debug(`annosLoaded, imSetsLoaded = ${this.imSetsLoaded}`)
+                        Logger.debug(`VOC annos loaded: ${this.annos.size}`)
+                        if (this.imSetsLoaded) {
+                            runcb(done)
+                        }
+                    }
+                })
             })
         })
     }
@@ -94,11 +116,15 @@ class VocDb {
 
                         count += 1
                         if (count === array.length) {
+                            this.imSetsLoaded = true
+                            Logger.debug(`imSetsLoaded, annosLoaded = ${this.annosLoaded}`)
                             Logger.debug(`VOC imSets loaded: ${this.imSets.size} set`)
                             this.imSets.forEach((value, key, map) => {
                                 Logger.debug(`Set name: ${key} Size: ${value.length}`)
                             })
-                            runcb(done)
+                            if (this.annosLoaded) {
+                                runcb(done)
+                            }
                         }
                     })
                 })
@@ -116,9 +142,11 @@ class VocDb {
     }
 
     _loadAnnoXml(xmlFile, cb) {
-        const data = fs.readFileSync(xmlFile)
-        this._parser2.parseString(data, (err, result) => {
-            cb(new VocAnno(result))
+        fs.readFile(xmlFile, (err, data) => {
+            var parser = new xml2js.Parser({ async: true })
+            parser.parseString(data, (err, result) => {
+                cb(new VocAnno(result))
+            })
         })
     }
 }

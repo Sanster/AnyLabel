@@ -3,7 +3,8 @@ import Canvas from './components/canvas'
 import Button from './components/button'
 import Local from './libs/local'
 import Logger from './libs/logger'
-const VocDb = electron.require('./main_thread/vocdb')
+const VocDb = remote.require('./main_thread/vocdb')
+// import VocDb from './main_thread/vocdb'
 
 class App extends React.Component {
     constructor(props) {
@@ -13,7 +14,8 @@ class App extends React.Component {
 
         this.state = {
             count: 0,
-            index: -1
+            index: -1,
+            setName: 'trainval'
         }
     }
 
@@ -29,6 +31,7 @@ class App extends React.Component {
         Local.openDir(path => {
             this.vocdb = new VocDb(path)
             this.vocdb.load(() => {
+                this.vocLoaded = true
                 Logger.debug("Voc Data Load finish")
                 this.showNext()
             })
@@ -46,10 +49,12 @@ class App extends React.Component {
     }
 
     render() {
-        const { index } = this.state
+        const { index, setName } = this.state
         let imPath = ''
+        let anno = null
         if (this.vocdb != null) {
-            imPath = this.vocdb.getImPath('trainval', index)
+            imPath = this.vocdb.getImPath(setName, index)
+            anno = this.vocdb.getAnno(setName, index)
         }
 
         return (
@@ -57,8 +62,7 @@ class App extends React.Component {
                 <Button onClick={() => this.chooseVOCDir()}> Open dir </Button>
                 <Button onClick={() => this.showNext()}> Prev </Button>
                 <Button onClick={() => this.showPrev()}> Next </Button>
-                <h4>{this.state.count}</h4>
-                <Canvas bg={imPath} />
+                <Canvas bg={imPath} anno={anno} />
             </div>
         )
     }

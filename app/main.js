@@ -2,7 +2,7 @@ const path = require('path')
 const electron = require('electron')
 const {
   default: installExtension,
-  REACT_DEVELOPER_TOOLS
+    REACT_DEVELOPER_TOOLS
 } = require('electron-devtools-installer')
 
 const BrowserWindow = electron.BrowserWindow
@@ -13,52 +13,53 @@ const debug = /development/.test(process.env.NODE_ENV)
 var mainWindow = null
 
 function initialize() {
-  var shouldQuit = makeSingleInstance()
-  if (shouldQuit) return app.quit()
+    var shouldQuit = makeSingleInstance()
+    if (shouldQuit) return app.quit()
 
-  function createWindow() {
-    var windowOptions = {
-      width: 1080,
-      minWidth: 680,
-      height: 840,
-      title: app.getName(),
-      // To load local image file
-      webPreferences: {
-        webSecurity: false
-      }
+    function createWindow() {
+        var windowOptions = {
+            width: 1080,
+            minWidth: 680,
+            height: 840,
+            title: app.getName(),
+            // To load local image file
+            webPreferences: {
+                webSecurity: false
+            }
+        }
+
+        mainWindow = new BrowserWindow(windowOptions)
+
+        if (debug) {
+            mainWindow.loadURL('http://localhost:1234')
+            installExtension(REACT_DEVELOPER_TOOLS)
+                .then(name => console.log(`Added Extension:  ${name}`))
+                .catch(err => console.log('An error occurred: ', err))
+            mainWindow.webContents.openDevTools()
+        } else {
+            mainWindow.loadURL(path.join('file://', __dirname, 'dist/index.html'))
+        }
+
+        mainWindow.on('closed', function () {
+            mainWindow = null
+        })
     }
 
-    mainWindow = new BrowserWindow(windowOptions)
-
-    if (debug) {
-      mainWindow.loadURL('http://localhost:1234')
-      installExtension(REACT_DEVELOPER_TOOLS)
-        .then(name => console.log(`Added Extension:  ${name}`))
-        .catch(err => console.log('An error occurred: ', err))
-    } else {
-      mainWindow.loadURL(path.join('file://', __dirname, 'dist/index.html'))
-    }
-
-    mainWindow.on('closed', function() {
-      mainWindow = null
+    app.on('ready', function () {
+        createWindow()
     })
-  }
 
-  app.on('ready', function() {
-    createWindow()
-  })
+    app.on('window-all-closed', function () {
+        if (process.platform !== 'darwin') {
+            app.quit()
+        }
+    })
 
-  app.on('window-all-closed', function() {
-    if (process.platform !== 'darwin') {
-      app.quit()
-    }
-  })
-
-  app.on('activate', function() {
-    if (mainWindow === null) {
-      createWindow()
-    }
-  })
+    app.on('activate', function () {
+        if (mainWindow === null) {
+            createWindow()
+        }
+    })
 }
 
 // Make this app a single instance app.
@@ -69,14 +70,14 @@ function initialize() {
 // Returns true if the current version of the app should quit instead of
 // launching.
 function makeSingleInstance() {
-  if (process.mas) return false
+    if (process.mas) return false
 
-  return app.makeSingleInstance(function() {
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore()
-      mainWindow.focus()
-    }
-  })
+    return app.makeSingleInstance(function () {
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore()
+            mainWindow.focus()
+        }
+    })
 }
 
 initialize()
