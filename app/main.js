@@ -18,10 +18,10 @@ function initialize() {
 
     function createWindow() {
         var windowOptions = {
-            width: 1080,
-            minWidth: 680,
-            height: 840,
-            title: app.getName(),
+            width: 1020,
+            minWidth: 1020,
+            height: 670,
+            minHeight: 670,
             // To load local image file
             webPreferences: {
                 webSecurity: false
