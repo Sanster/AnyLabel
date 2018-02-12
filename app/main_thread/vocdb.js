@@ -35,17 +35,21 @@ class VocDb {
         this.totalIms = 0
     }
 
-    // load metadata from and Annotations, ImageSets
+    // Load file in ImageSets/Main to get image name
     load(done) {
-        this.annosLoaded = false
-        this.imSetsLoaded = false
-
-        this._loadAnnos(this.annosDir, done)
         this._loadImSets(this.imSetsDir, done)
     }
 
     getImSet(setName) {
-        return this.imSets.get(setName)
+        if (this.imSets.has(setName)) {
+            return this.imSets.get(setName)
+        }
+    }
+
+    getImSetCount(setName) {
+        if (this.imSets.has(setName)) {
+            return this.imSets.get(setName).length
+        }
     }
 
     getImPath(setName, index) {
@@ -55,7 +59,8 @@ class VocDb {
 
     getAnno(setName, index) {
         const imName = this.getImSet(setName)[index]
-        return this.annos.get(imName)
+        const fpath = pj(this.annosDir, imName + '.xml')
+        return this._loadAnnoXmlSync(fpath)
     }
 
     _getBaseName(filename) {
@@ -116,15 +121,11 @@ class VocDb {
 
                         count += 1
                         if (count === array.length) {
-                            this.imSetsLoaded = true
-                            Logger.debug(`imSetsLoaded, annosLoaded = ${this.annosLoaded}`)
                             Logger.debug(`VOC imSets loaded: ${this.imSets.size} set`)
                             this.imSets.forEach((value, key, map) => {
                                 Logger.debug(`Set name: ${key} Size: ${value.length}`)
                             })
-                            if (this.annosLoaded) {
-                                runcb(done)
-                            }
+                            runcb(done)
                         }
                     })
                 })
