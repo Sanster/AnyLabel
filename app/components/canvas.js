@@ -56,8 +56,8 @@ class Canvas extends React.Component {
     this.refs.canvas.width = this.sWidth
     this.refs.canvas.height = this.sHeight
 
-    // We should get new context after set width and height
-    this.ctx = this.refs.canvas.getContext('2d')
+    // strokeStype will be reset after set width/height
+    // so we need to reset here
     this.ctx.strokeStyle = 'rgb(0,255,0)'
   }
 
