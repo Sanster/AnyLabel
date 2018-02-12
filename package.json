@@ -7,8 +7,7 @@
     "test": "cd app && mocha --timeout 30s",
     "start": "cross-env NODE_ENV=development electron .",
     "dev": "cross-env NODE_ENV=development parcel app/index.html",
-    "prod":
-      "cross-env NODE_ENV=production parcel build app/index.html --no-minify --public-url ."
+    "prod": "cross-env NODE_ENV=production parcel build app/index.html --no-minify --public-url ."
   },
   "engines": {
     "node": ">9.0.0"
@@ -26,6 +25,7 @@
     "parcel-bundler": "^1.5.0"
   },
   "dependencies": {
+    "mousetrap": "^1.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "xml2js": "^0.4.19"
