@@ -64,7 +64,9 @@ class App extends React.Component {
       <div className="App">
         <TitleBar />
         <Button onClick={() => this.chooseVOCDir()}> Open dir </Button>
-        <Canvas bg={imPath} anno={anno} />
+        <div id="content">
+          <Canvas bg={imPath} anno={anno} />
+        </div>
       </div>
     )
   }
