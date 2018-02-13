@@ -1,11 +1,9 @@
 import React from 'react'
+import Mousetrap from 'mousetrap'
 import Canvas from './components/canvas'
 import Button from './components/button'
-import Local from './libs/local'
 import Logger from './libs/logger'
-import Mousetrap from 'mousetrap'
 const VocDb = remote.require('./main_thread/vocdb')
-// import VocDb from './main_thread/vocdb'
 
 class App extends React.Component {
   constructor(props) {

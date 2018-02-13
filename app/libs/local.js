@@ -20,5 +20,5 @@ class Local {
   }
 }
 
-// TODO: check if import in different file is same instance
+// this will export same instance after first import
 export default new Local()
