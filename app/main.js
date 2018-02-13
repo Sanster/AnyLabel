@@ -2,7 +2,7 @@ const path = require('path')
 const electron = require('electron')
 const {
   default: installExtension,
-    REACT_DEVELOPER_TOOLS
+  REACT_DEVELOPER_TOOLS
 } = require('electron-devtools-installer')
 
 const BrowserWindow = electron.BrowserWindow
@@ -13,53 +13,54 @@ const debug = /development/.test(process.env.NODE_ENV)
 var mainWindow = null
 
 function initialize() {
-    var shouldQuit = makeSingleInstance()
-    if (shouldQuit) return app.quit()
+  var shouldQuit = makeSingleInstance()
+  if (shouldQuit) return app.quit()
 
-    function createWindow() {
-        var windowOptions = {
-            width: 1020,
-            minWidth: 1020,
-            height: 670,
-            minHeight: 670,
-            // To load local image file
-            webPreferences: {
-                webSecurity: false
-            }
-        }
-
-        mainWindow = new BrowserWindow(windowOptions)
-
-        if (debug) {
-            mainWindow.loadURL('http://localhost:1234')
-            installExtension(REACT_DEVELOPER_TOOLS)
-                .then(name => console.log(`Added Extension:  ${name}`))
-                .catch(err => console.log('An error occurred: ', err))
-            mainWindow.webContents.openDevTools()
-        } else {
-            mainWindow.loadURL(path.join('file://', __dirname, 'dist/index.html'))
-        }
-
-        mainWindow.on('closed', function () {
-            mainWindow = null
-        })
+  function createWindow() {
+    var windowOptions = {
+      width: 1020,
+      titleBarStyle: 'hidden',
+      minWidth: 1020,
+      height: 670,
+      minHeight: 670,
+      // To load local image file
+      webPreferences: {
+        webSecurity: false
+      }
     }
 
-    app.on('ready', function () {
-        createWindow()
-    })
+    mainWindow = new BrowserWindow(windowOptions)
 
-    app.on('window-all-closed', function () {
-        if (process.platform !== 'darwin') {
-            app.quit()
-        }
-    })
+    if (debug) {
+      mainWindow.loadURL('http://localhost:1234')
+      installExtension(REACT_DEVELOPER_TOOLS)
+        .then(name => console.log(`Added Extension:  ${name}`))
+        .catch(err => console.log('An error occurred: ', err))
+      mainWindow.webContents.openDevTools()
+    } else {
+      mainWindow.loadURL(path.join('file://', __dirname, 'dist/index.html'))
+    }
 
-    app.on('activate', function () {
-        if (mainWindow === null) {
-            createWindow()
-        }
+    mainWindow.on('closed', function() {
+      mainWindow = null
     })
+  }
+
+  app.on('ready', function() {
+    createWindow()
+  })
+
+  app.on('window-all-closed', function() {
+    if (process.platform !== 'darwin') {
+      app.quit()
+    }
+  })
+
+  app.on('activate', function() {
+    if (mainWindow === null) {
+      createWindow()
+    }
+  })
 }
 
 // Make this app a single instance app.
@@ -70,14 +71,14 @@ function initialize() {
 // Returns true if the current version of the app should quit instead of
 // launching.
 function makeSingleInstance() {
-    if (process.mas) return false
+  if (process.mas) return false
 
-    return app.makeSingleInstance(function () {
-        if (mainWindow) {
-            if (mainWindow.isMinimized()) mainWindow.restore()
-            mainWindow.focus()
-        }
-    })
+  return app.makeSingleInstance(function() {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.focus()
+    }
+  })
 }
 
 initialize()
