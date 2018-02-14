@@ -2,7 +2,9 @@ import React from 'react'
 import Mousetrap from 'mousetrap'
 import Canvas from './components/canvas'
 import Button from './components/button'
-import TitleBar from './components/titlebar'
+import TopBar from './components/Topbar'
+import SideBar from './components/sidebar'
+import BottomBar from './components/bottombar'
 import Logger from './libs/logger'
 import Local from './libs/local'
 const VocDb = remote.require('./main_thread/vocdb')
@@ -62,11 +64,15 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <TitleBar />
+        <TopBar />
         <Button onClick={() => this.chooseVOCDir()}> Open dir </Button>
         <div id="content">
-          <Canvas bg={imPath} anno={anno} />
+          <div className="canvas-wrapper">
+            <Canvas bg={imPath} anno={anno} />
+          </div>
+          <SideBar />
         </div>
+        <BottomBar />
       </div>
     )
   }
