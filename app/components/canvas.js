@@ -5,12 +5,11 @@ import Point from '../models/point'
 import Logger from '../libs/logger'
 
 class Canvas extends React.Component {
-  componentDidMount() {
-    console.log('componentDidMount')
-    this.IM_MAX_WIDTH = 980
-    this.IM_MAX_HEIGHT = 600
+  constructor(props) {
+    super(props)
+    this.IM_MAX_WIDTH = 730
+    this.IM_MAX_HEIGHT = 520
 
-    this.ctx = this.refs.canvas.getContext('2d')
     this.rects = []
     this.isDrawing = false
     this.img = null
@@ -18,11 +17,20 @@ class Canvas extends React.Component {
     this.scale = 1
     this.sHeight = 0
     this.sWidth = 0
+    this.mousePos = new Point(0, 0)
+
+    this.updateCanvas(props.imPath, props.anno)
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount')
+
+    this.ctx = this.refs.canvas.getContext('2d')
   }
 
   componentWillReceiveProps(props) {
     console.log('componentWillReceiveProps')
-    this.updateCanvas(props.bg, props.anno)
+    this.updateCanvas(props.imPath, props.anno)
   }
 
   drawAnno(anno) {
@@ -59,6 +67,7 @@ class Canvas extends React.Component {
     // strokeStype will be reset after set width/height
     // so we need to reset here
     this.ctx.strokeStyle = 'rgb(0,255,0)'
+    this.ctx.lineWidth = 2
   }
 
   _onImgLoad(img, anno) {
@@ -116,10 +125,11 @@ class Canvas extends React.Component {
   }
 
   handleMouseMove(e) {
+    this.mousePos.x = e.nativeEvent.offsetX
+    this.mousePos.y = e.nativeEvent.offsetY
+    this.props.onMouseMove(this.mousePos)
+
     if (this.isDrawing) {
-      console.log(
-        `mouse move x: ${e.nativeEvent.offsetX} y: ${e.nativeEvent.offsetY}`
-      )
       this._clear()
       this.drawImg()
       this.drawRect(this.mouseDownPoint, this.getPoint(e))

@@ -7,6 +7,7 @@ import SideBar from './components/sidebar'
 import BottomBar from './components/bottombar'
 import Logger from './libs/logger'
 import Local from './libs/local'
+import Point from './models/point'
 const VocDb = remote.require('./main_thread/vocdb')
 
 class App extends React.Component {
@@ -14,9 +15,14 @@ class App extends React.Component {
     super(props)
     this.vocdb = null
     this.setName = 'trainval'
+    this.imPath = ''
+    this.anno = null
+
+    this.onMouseMove = this.onMouseMove.bind(this)
 
     this.state = {
-      index: 0
+      index: 0,
+      mousePos: null
     }
   }
 
@@ -53,13 +59,15 @@ class App extends React.Component {
     }
   }
 
+  onMouseMove(mousePos) {
+    this.setState({ mousePos: mousePos })
+  }
+
   render() {
-    const { index } = this.state
-    let imPath = ''
-    let anno = null
+    const { index, mousePos } = this.state
     if (this.vocdb != null) {
-      imPath = this.vocdb.getImPath(this.setName, index)
-      anno = this.vocdb.getAnno(this.setName, index)
+      this.imPath = this.vocdb.getImPath(this.setName, index)
+      this.anno = this.vocdb.getAnno(this.setName, index)
     }
 
     return (
@@ -68,11 +76,17 @@ class App extends React.Component {
         <Button onClick={() => this.chooseVOCDir()}> Open dir </Button>
         <div id="content">
           <div className="canvas-wrapper">
-            <Canvas bg={imPath} anno={anno} />
+            {this.imPath !== '' && (
+              <Canvas
+                imPath={this.imPath}
+                anno={this.anno}
+                onMouseMove={this.onMouseMove}
+              />
+            )}
           </div>
           <SideBar />
         </div>
-        <BottomBar />
+        <BottomBar mousePos={mousePos} />
       </div>
     )
   }
