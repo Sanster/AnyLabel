@@ -1,0 +1,30 @@
+<svg width="25" height="21" viewBox="0 0 25 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>folder</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(-10 -33)">
+<g id="folder">
+<g id="Rectangle 2">
+<mask id="mask0_outline_ins">
+<use xlink:href="#path0_fill" fill="white" transform="translate(10.9515 38.9349)"/>
+</mask>
+<g mask="url(#mask0_outline_ins)">
+<use xlink:href="#path1_stroke_2x" transform="translate(10.9515 38.9349)" fill="#FFFFFF"/>
+</g>
+</g>
+<g id="Rectangle 2.1">
+<mask id="mask1_outline_ins">
+<use xlink:href="#path2_fill" fill="white" transform="translate(10.9515 33.4995)"/>
+</mask>
+<g mask="url(#mask1_outline_ins)">
+<use xlink:href="#path3_stroke_2x" transform="translate(10.9515 33.4995)" fill="#FFFFFF"/>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<path id="path0_fill" d="M 0 0L 22 0C 23.1046 0 24 0.895431 24 2L 24 12.8922C 24 13.9968 23.1046 14.8922 22 14.8922L 2 14.8922C 0.895431 14.8922 0 13.9968 0 12.8922L 0 0Z"/>
+<path id="path1_stroke_2x" d="M 0 0L 0 -1L -1 -1L -1 0L 0 0ZM 0 1L 22 1L 22 -1L 0 -1L 0 1ZM 23 2L 23 12.8922L 25 12.8922L 25 2L 23 2ZM 22 13.8922L 2 13.8922L 2 15.8922L 22 15.8922L 22 13.8922ZM 1 12.8922L 1 0L -1 0L -1 12.8922L 1 12.8922ZM 2 13.8922C 1.44772 13.8922 1 13.4445 1 12.8922L -1 12.8922C -1 14.5491 0.343146 15.8922 2 15.8922L 2 13.8922ZM 23 12.8922C 23 13.4445 22.5523 13.8922 22 13.8922L 22 15.8922C 23.6569 15.8922 25 14.5491 25 12.8922L 23 12.8922ZM 22 1C 22.5523 1 23 1.44772 23 2L 25 2C 25 0.343146 23.6569 -1 22 -1L 22 1Z"/>
+<path id="path2_fill" d="M 0 2C 0 0.895431 0.895431 0 2 0L 10.7386 0C 11.8432 0 12.7386 0.895431 12.7386 2L 12.7386 6.17152L 0 6.17152L 0 2Z"/>
+<path id="path3_stroke_2x" d="M 12.7386 6.17152L 12.7386 7.17152L 13.7386 7.17152L 13.7386 6.17152L 12.7386 6.17152ZM 0 6.17152L -1 6.17152L -1 7.17152L 0 7.17152L 0 6.17152ZM 2 1L 10.7386 1L 10.7386 -1L 2 -1L 2 1ZM 11.7386 2L 11.7386 6.17152L 13.7386 6.17152L 13.7386 2L 11.7386 2ZM 12.7386 5.17152L 0 5.17152L 0 7.17152L 12.7386 7.17152L 12.7386 5.17152ZM 1 6.17152L 1 2L -1 2L -1 6.17152L 1 6.17152ZM 10.7386 1C 11.2909 1 11.7386 1.44772 11.7386 2L 13.7386 2C 13.7386 0.343146 12.3955 -1 10.7386 -1L 10.7386 1ZM 2 -1C 0.343146 -1 -1 0.343146 -1 2L 1 2C 1 1.44772 1.44772 1 2 1L 2 -1Z"/>
+</defs>
+</svg>

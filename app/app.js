@@ -1,7 +1,6 @@
 import React from 'react'
 import Mousetrap from 'mousetrap'
 import Canvas from './components/canvas'
-import Button from './components/button'
 import TopBar from './components/Topbar'
 import SideBar from './components/sidebar'
 import BottomBar from './components/bottombar'
@@ -41,6 +40,12 @@ class App extends React.Component {
     })
   }
 
+  chooseXMLDir() {
+    Local.openDir(path => {
+      console.log(path)
+    })
+  }
+
   show(index) {
     this.setState({ index: index })
   }
@@ -63,6 +68,14 @@ class App extends React.Component {
     this.setState({ mousePos: mousePos })
   }
 
+  onImageBtnClick() {
+    this.chooseVOCDir()
+  }
+
+  onXMLBtnClick() {
+    this.chooseXMLDir()
+  }
+
   render() {
     const { index, mousePos } = this.state
     if (this.vocdb != null) {
@@ -72,8 +85,10 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <TopBar />
-        <Button onClick={() => this.chooseVOCDir()}> Open dir </Button>
+        <TopBar
+          onImageBtnClick={() => this.onImageBtnClick()}
+          onXMLBtnClick={() => this.onXMLBtnClick()}
+        />
         <div id="content">
           <div className="canvas-wrapper">
             {this.imPath !== '' && (

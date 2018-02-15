@@ -1,3 +1,7 @@
+@import 'svg_button.scss';
+@import 'bottom_bar.scss';
+@import 'top_bar.scss';
+
 html,
 body {
   background: white;
@@ -21,15 +25,6 @@ body {
   text-align: center;
 }
 
-#topbar {
-  width: 100%;
-  height: 68px;
-  background: #3d3d3d;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-app-region: drag;
-}
-
 #content {
   height: 100%;
   width: 100%;
@@ -50,28 +45,5 @@ body {
     width: 260px;
     height: 100%;
     background: #fcfcfc;
-  }
-}
-
-#bottom-bar {
-  height: 28px;
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-
-  .mouse-pos {
-    width: 36px;
-    padding-right: 5px;
-    font-size: 11px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .value {
-      width: 25px;
-      padding-left: 4px;
-      text-align: left;
-    }
   }
 }

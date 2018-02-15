@@ -1,0 +1,14 @@
+.svg-button {
+  color: white;
+  font-size: 10px;
+  margin-right: 25px;
+  padding-top: 5px;
+  padding-bottom: 3px;
+  padding-right: 8px;
+  padding-left: 8px;
+  cursor: default;
+
+  &:hover {
+    background: #050505;
+  }
+}
