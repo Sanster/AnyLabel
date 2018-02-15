@@ -44,6 +44,15 @@ function initialize() {
     mainWindow.on('closed', function() {
       mainWindow = null
     })
+
+    // Disable zoom
+    // https://github.com/electron/electron/issues/8793
+    let webContents = mainWindow.webContents
+    webContents.on('did-finish-load', () => {
+      webContents.setZoomFactor(1)
+      webContents.setVisualZoomLevelLimits(1, 1)
+      webContents.setLayoutZoomLevelLimits(0, 0)
+    })
   }
 
   app.on('ready', function() {
