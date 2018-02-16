@@ -1,6 +1,6 @@
 import React from 'react'
 import Mousetrap from 'mousetrap'
-import Canvas from './components/canvas'
+import CanvasView from './components/canvas_view'
 import TopBar from './components/Topbar'
 import SideBar from './components/sidebar'
 import BottomBar from './components/bottombar'
@@ -92,7 +92,7 @@ class App extends React.Component {
         <div id="content">
           <div className="canvas-wrapper">
             {this.imPath !== '' && (
-              <Canvas
+              <CanvasView
                 imPath={this.imPath}
                 anno={this.anno}
                 onMouseMove={this.onMouseMove}

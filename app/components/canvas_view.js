@@ -3,8 +3,9 @@ import { setTimeout } from 'timers'
 import Rect from '../models/rect'
 import Point from '../models/point'
 import Logger from '../libs/logger'
+import Canvas from '../libs/canvas'
 
-class Canvas extends React.Component {
+class CanvasView extends React.Component {
   constructor(props) {
     super(props)
     this.IM_MAX_WIDTH = 730
@@ -24,8 +25,7 @@ class Canvas extends React.Component {
 
   componentDidMount() {
     console.log('componentDidMount')
-
-    this.ctx = this.refs.canvas.getContext('2d')
+    this.canvas = new Canvas(this.refs.canvas)
   }
 
   componentWillReceiveProps(props) {
@@ -38,12 +38,7 @@ class Canvas extends React.Component {
 
     Logger.debug(`Object num: ${anno.objs.length}`)
     anno.objs.forEach(obj => {
-      this.ctx.strokeRect(
-        obj.rect.x1 / this.scale,
-        obj.rect.y1 / this.scale,
-        obj.rect.width / this.scale,
-        obj.rect.height / this.scale
-      )
+      this.canvas.drawRect(obj.rect, this.scale)
     })
   }
 
@@ -61,28 +56,19 @@ class Canvas extends React.Component {
     this.sWidth = img.width / this.scale
     this.sHeight = img.height / this.scale
 
-    this.refs.canvas.width = this.sWidth
-    this.refs.canvas.height = this.sHeight
+    this.canvas.setWidth(this.sWidth)
+    this.canvas.setHeight(this.sHeight)
 
     // strokeStype will be reset after set width/height
     // so we need to reset here
-    this.ctx.strokeStyle = 'rgb(0,255,0)'
-    this.ctx.lineWidth = 2
+    this.canvas.setStrokeColor(0, 255, 0)
+    this.canvas.setLineWidth(2)
   }
 
   _onImgLoad(img, anno) {
     this._findBestImgSize(img)
-    this.ctx.drawImage(
-      img,
-      0,
-      0,
-      img.width,
-      img.height,
-      0,
-      0,
-      this.sWidth,
-      this.sHeight
-    )
+
+    this.canvas.drawImage(img, this.sWidth, this.sHeight)
     this.drawAnno(anno)
     this.img = img
   }
@@ -99,17 +85,7 @@ class Canvas extends React.Component {
 
   drawImg() {
     if (this.img != null) {
-      this.ctx.drawImage(
-        this.img,
-        0,
-        0,
-        this.img.width,
-        this.img.height,
-        0,
-        0,
-        this.sWidth,
-        this.sHeight
-      )
+      this.canvas.drawImage(this.img, this.sWidth, this.sHeight)
     }
   }
 
@@ -132,7 +108,7 @@ class Canvas extends React.Component {
     if (this.isDrawing) {
       this._clear()
       this.drawImg()
-      this.drawRect(this.mouseDownPoint, this.getPoint(e))
+      //   this.drawRect(this.mouseDownPoint, this.getPoint(e))
     }
   }
 
@@ -144,12 +120,8 @@ class Canvas extends React.Component {
     return new Point(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
   }
 
-  drawRect(p1, p2) {
-    this.ctx.strokeRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y)
-  }
-
   _clear() {
-    this.ctx.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height)
+    this.canvas.clear()
   }
 
   render() {
@@ -165,4 +137,4 @@ class Canvas extends React.Component {
   }
 }
 
-export default Canvas
+export default CanvasView
