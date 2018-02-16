@@ -30,7 +30,7 @@ class App extends React.Component {
     Mousetrap.bind('right', () => this.showNext())
   }
 
-  chooseVOCDir() {
+  chooseIMDir() {
     Local.openDir(path => {
       this.vocdb = new VocDb(path)
       this.vocdb.load(() => {
@@ -44,6 +44,14 @@ class App extends React.Component {
     Local.openDir(path => {
       console.log(path)
     })
+  }
+
+  saveXml() {
+    console.log('saveXml')
+  }
+
+  startDrawingBox() {
+    console.log('startDrawingBox')
   }
 
   show(index) {
@@ -69,11 +77,19 @@ class App extends React.Component {
   }
 
   onImageBtnClick() {
-    this.chooseVOCDir()
+    this.chooseIMDir()
   }
 
   onXMLBtnClick() {
     this.chooseXMLDir()
+  }
+
+  onSaveBtnClick() {
+    this.saveXml()
+  }
+
+  onBoxBtnClick() {
+    this.startDrawingBox()
   }
 
   render() {
@@ -88,6 +104,8 @@ class App extends React.Component {
         <TopBar
           onImageBtnClick={() => this.onImageBtnClick()}
           onXMLBtnClick={() => this.onXMLBtnClick()}
+          onSaveBtnClick={() => this.onSaveBtnClick()}
+          onBoxBtnClick={() => this.onBoxBtnClick()}
         />
         <div id="content">
           <div className="canvas-wrapper">

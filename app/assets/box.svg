@@ -1,0 +1,18 @@
+<svg width="23" height="23" viewBox="0 0 23 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>box</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(-202 -31)">
+<g id="box">
+<mask id="mask0_outline_ins">
+<use xlink:href="#path0_fill" fill="white" transform="translate(202.456 31.1068)"/>
+</mask>
+<g mask="url(#mask0_outline_ins)">
+<use xlink:href="#path1_stroke_2x" transform="translate(202.456 31.1068)" fill="#FFFFFF"/>
+</g>
+</g>
+</g>
+<defs>
+<path id="path0_fill" d="M 0 0L 22 0L 22 22L 0 22L 0 0Z"/>
+<path id="path1_stroke_2x" d="M 0 0L 0 -1L -1 -1L -1 0L 0 0ZM 22 0L 23 0L 23 -1L 22 -1L 22 0ZM 22 22L 22 23L 23 23L 23 22L 22 22ZM 0 22L -1 22L -1 23L 0 23L 0 22ZM 0 1L 22 1L 22 -1L 0 -1L 0 1ZM 21 0L 21 22L 23 22L 23 0L 21 0ZM 22 21L 0 21L 0 23L 22 23L 22 21ZM 1 22L 1 0L -1 0L -1 22L 1 22Z"/>
+</defs>
+</svg>
