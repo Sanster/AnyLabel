@@ -81,6 +81,8 @@ class CanvasView extends React.Component {
       img.onload = () => this._onImgLoad(img, anno)
       img.src = new URL('file://' + imPath)
     }
+
+    this.drawAnno(anno)
   }
 
   drawImg() {
