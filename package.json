@@ -23,7 +23,7 @@
     "electron-devtools-installer": "^2.2.3",
     "mocha": "^5.0.0",
     "node-sass": "^4.7.2",
-    "parcel-bundler": "^1.8.1"
+    "parcel-bundler": "^1.9.2"
   },
   "dependencies": {
     "@material-ui/core": "^1.0.0",
