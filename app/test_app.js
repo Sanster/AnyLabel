@@ -1,13 +1,18 @@
 import React from 'react'
-import Button from '@material-ui/core/Button'
+import { Router } from 'react-router'
+import createBrowserHistory from 'history/createBrowserHistory'
+import HomePage from './containers/HomePage'
+
+const history = createBrowserHistory()
 
 class App extends React.Component {
   render() {
     return (
-      <Button variant="raised" color="primary">
-        Hello World
-      </Button>
-      // <div>Hello</div>
+      <Router history={history}>
+        <Switch>
+          <Route path="/" component={HomePage} />
+        </Switch>
+      </Router>
     )
   }
 }
