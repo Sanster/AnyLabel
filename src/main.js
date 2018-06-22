@@ -10,12 +10,16 @@ let mainWindow
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600 })
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: { webSecurity: false }
+  })
 
   // and load the index.html of the app.
-  if (process.env.NODE_ENV === 'dev')
+  if (process.env.NODE_ENV === 'dev') {
     mainWindow.loadURL('http://localhost:3000')
-  else
+  } else {
     mainWindow.loadURL(
       url.format({
         pathname: path.join(__dirname, '/../build/index.html'),
@@ -23,6 +27,7 @@ function createWindow() {
         slashes: true
       })
     )
+  }
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()

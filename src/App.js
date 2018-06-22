@@ -1,19 +1,44 @@
 import React, { Component } from 'react'
-import logo from './logo.svg'
+import TopBar from './components/TopBar'
+import CanvasView from './components/CanvasView'
+import BottomBar from './components/BottomBar'
+import Point from './models/Point'
 import './App.css'
-import Button from '@material-ui/core/Button'
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      imgIndex: 0,
+      imgPath: '/home/cwq/Desktop/img_5560.jpg',
+      // imgPath: '',
+      vocAnno: null,
+      mousePos: new Point()
+    }
+  }
+
+  onCanvasMouseMove(x, y) {
+    const _mousePos = this.state.mousePos
+    _mousePos.x = x
+    _mousePos.y = y
+    this.setState({ mousePos: _mousePos })
+  }
+
   render() {
+    const { imgPath, vocAnno, mousePos } = this.state
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to AnyLabel</h1>
-        </header>
-        <Button variant="contained" color="primary">
-          VOC2007
-        </Button>
+      <div id="App">
+        <div id="content">
+          <div className="canvas-wrapper">
+            <CanvasView
+              imgPath={imgPath}
+              vocAnno={vocAnno}
+              onMouseMove={(x, y) => this.onCanvasMouseMove(x, y)}
+            />
+          </div>
+        </div>
+        <BottomBar mousePos={mousePos} />
       </div>
     )
   }
