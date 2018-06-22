@@ -7,11 +7,10 @@ import VocAnno from '../models/VocAnno'
 import Logger from '../libs/Logger'
 import Canvas from '../libs/Canvas'
 
-class CanvasView extends React.Component {
-  constructor(props) {
-    super(props)
-  }
+const electron = window.require('electron')
+const fs = electron.remote.require('fs')
 
+class CanvasView extends React.Component {
   componentDidMount() {
     Logger.log('componentDidMount')
     this.canvas = new Canvas(this.refs.canvas)
@@ -64,14 +63,15 @@ class CanvasView extends React.Component {
   }
 
   updateCanvas(imgPath, anno) {
-    if (this.img == null || imgPath != this.imgPath) {
-      this.imgPath = imgPath
-      Logger.log(`Load image: ${imgPath}`)
-      const img = new Image()
-      img.onload = () => this._onImgLoad(img, anno)
-      img.src = new URL('file://' + imgPath)
+    if (fs.existsSync(imgPath)) {
+      if (this.img == null || imgPath !== this.imgPath) {
+        this.imgPath = imgPath
+        Logger.log(`Load image: ${imgPath}`)
+        const img = new Image()
+        img.onload = () => this._onImgLoad(img, anno)
+        img.src = new URL('file://' + imgPath)
+      }
     }
-
     this.drawAnno(anno)
   }
 

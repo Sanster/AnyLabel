@@ -1,5 +1,6 @@
 const path = require('path')
 const url = require('url')
+const MenuBuilder = require('./menu')
 
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
@@ -39,6 +40,9 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  const menuBuilder = new MenuBuilder(mainWindow)
+  menuBuilder.buildMenu()
 }
 
 // This method will be called when Electron has finished

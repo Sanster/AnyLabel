@@ -10,8 +10,7 @@ class App extends Component {
     super(props)
     this.state = {
       imgIndex: 0,
-      imgPath: '/home/cwq/Desktop/img_5560.jpg',
-      // imgPath: '',
+      imgPath: '',
       vocAnno: null,
       mousePos: new Point()
     }
@@ -24,11 +23,14 @@ class App extends Component {
     this.setState({ mousePos: _mousePos })
   }
 
+  onVocDirSelect(vocDir) {}
+
   render() {
     const { imgPath, vocAnno, mousePos } = this.state
 
     return (
       <div id="App">
+        <TopBar onVocDirSelect={vocDir => this.onVocDirSelect(vocDir)} />
         <div id="content">
           <div className="canvas-wrapper">
             <CanvasView
