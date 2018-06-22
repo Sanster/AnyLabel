@@ -1,0 +1,24 @@
+{
+  "name": "any_label",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/main.js",
+  "homepage": "./",
+  "dependencies": {
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-scripts": "1.1.4"
+  },
+  "scripts": {
+    "start": "cross-env BROWSER=none react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "dev": "cross-env NODE_ENV=dev electron .",
+    "prod": "cross-env NODE_ENV=prod electron ."
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "electron": "^2.0.3"
+  }
+}
