@@ -10,7 +10,8 @@
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "xml2js": "^0.4.19"
   },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start",

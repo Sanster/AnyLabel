@@ -23,7 +23,7 @@ class TopBar extends React.Component {
           <Button
             variant="contained"
             color="primary"
-            onClick={this.handleSelectVoc}
+            onClick={() => this.handleSelectVoc()}
           >
             Voc
           </Button>

@@ -3,6 +3,7 @@ import TopBar from './components/TopBar'
 import CanvasView from './components/CanvasView'
 import BottomBar from './components/BottomBar'
 import Point from './models/Point'
+import Voc from './libs/Voc'
 import './App.css'
 
 class App extends Component {
@@ -14,6 +15,8 @@ class App extends Component {
       vocAnno: null,
       mousePos: new Point()
     }
+
+    this.voc = null
   }
 
   onCanvasMouseMove(x, y) {
@@ -23,14 +26,16 @@ class App extends Component {
     this.setState({ mousePos: _mousePos })
   }
 
-  onVocDirSelect(vocDir) {}
+  onVocDirSelected(vocDir) {
+    this.voc = new Voc(vocDir)
+  }
 
   render() {
     const { imgPath, vocAnno, mousePos } = this.state
 
     return (
       <div id="App">
-        <TopBar onVocDirSelect={vocDir => this.onVocDirSelect(vocDir)} />
+        <TopBar onVocDirSelected={vocDir => this.onVocDirSelected(vocDir)} />
         <div id="content">
           <div className="canvas-wrapper">
             <CanvasView

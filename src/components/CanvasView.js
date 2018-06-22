@@ -6,9 +6,7 @@ import Point from '../models/Point'
 import VocAnno from '../models/VocAnno'
 import Logger from '../libs/Logger'
 import Canvas from '../libs/Canvas'
-
-const electron = window.require('electron')
-const fs = electron.remote.require('fs')
+import io from '../libs/io'
 
 class CanvasView extends React.Component {
   componentDidMount() {
@@ -63,7 +61,7 @@ class CanvasView extends React.Component {
   }
 
   updateCanvas(imgPath, anno) {
-    if (fs.existsSync(imgPath)) {
+    if (io.exists(imgPath)) {
       if (this.img == null || imgPath !== this.imgPath) {
         this.imgPath = imgPath
         Logger.log(`Load image: ${imgPath}`)
