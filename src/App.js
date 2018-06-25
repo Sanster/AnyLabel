@@ -28,6 +28,12 @@ class App extends Component {
 
   onVocDirSelected(vocDir) {
     this.voc = new Voc(vocDir)
+    const imgPath = this.voc.getImgPathByIndex('train', 0)
+    const vocAnno = this.voc.getVocAnnoByIndex('train', 0)
+    this.setState({
+      imgPath: imgPath,
+      vocAnno: vocAnno
+    })
   }
 
   render() {

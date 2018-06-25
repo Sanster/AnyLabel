@@ -1,6 +1,6 @@
-const Size = require('./Size')
-const VocObj = require('./VocObject')
-const Rect = require('./Rect')
+import Size from './Size'
+import VocObj from './VocObject'
+import Rect from './Rect'
 
 class VocAnno {
   constructor(xmlResult) {

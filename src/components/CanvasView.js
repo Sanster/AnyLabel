@@ -23,7 +23,7 @@ class CanvasView extends React.Component {
   drawAnno(anno) {
     if (anno == null) return
 
-    Logger.debug(`Object num: ${anno.objs.length}`)
+    Logger.log(`Object num: ${anno.objs.length}`)
     anno.objs.forEach(obj => {
       this.canvas.drawRect(obj.rect, this.scale)
     })
