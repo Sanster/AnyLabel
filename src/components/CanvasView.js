@@ -16,7 +16,7 @@ class CanvasView extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    // Logger.log('componentWillReceiveProps')
+    Logger.log('CanvasView componentWillReceiveProps')
     this.updateCanvas(props.imgPath, props.vocAnno)
   }
 
@@ -66,11 +66,12 @@ class CanvasView extends React.Component {
         this.imgPath = imgPath
         Logger.log(`Load image: ${imgPath}`)
         const img = new Image()
-        img.onload = () => this._onImgLoad(img, anno)
+        img.onload = () => {
+          this._onImgLoad(img, anno)
+        }
         img.src = new URL('file://' + imgPath)
       }
     }
-    this.drawAnno(anno)
   }
 
   drawImg() {
@@ -89,11 +90,13 @@ class CanvasView extends React.Component {
 
   render() {
     return (
-      <canvas
-        id="canvas"
-        ref="canvas"
-        onMouseMove={e => this.handleMouseMove(e)}
-      />
+      <div className="canvas-wrapper">
+        <canvas
+          id="canvas"
+          ref="canvas"
+          onMouseMove={e => this.handleMouseMove(e)}
+        />
+      </div>
     )
   }
 }

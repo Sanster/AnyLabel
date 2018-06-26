@@ -13,7 +13,7 @@ class VocAnno {
     this.filename = annotation.filename[0]
     annotation.object.forEach(obj => {
       const box = obj.bndbox[0]
-      const truncated = obj.truncated[0] == 1 ? true : false
+      const truncated = obj.truncated[0] === 1 ? true : false
       const rect = new Rect(box.xmin[0], box.ymin[0], box.xmax[0], box.ymax[0])
       this.objs.push(new VocObj(obj.name[0], truncated, rect))
     })
