@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 
 import TopBar from './components/TopBar'
+import Toolbar from '@material-ui/core/Toolbar'
 import LeftSideBar from './components/LeftSideBar'
 import RightSideBar from './components/RightSideBar'
 import CanvasView from './components/CanvasView'
@@ -73,7 +74,9 @@ class App extends Component {
     return (
       <div className={classes.root}>
         <AppBar position="absolute" className={classes.appBar}>
-          <TopBar onVocDirSelected={this.onVocDirSelected} />
+          <Toolbar>
+            {/* <TopBar onVocDirSelected={this.onVocDirSelected} /> */}
+          </Toolbar>
         </AppBar>
 
         <LeftSideBar />
