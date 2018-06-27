@@ -9,6 +9,11 @@ import Canvas from '../libs/Canvas'
 import io from '../libs/io'
 
 class CanvasView extends React.Component {
+  constructor(props) {
+    super(props)
+    this.MAX_WIDTH = 750
+    this.MAX_HEIGHT = 600
+  }
   componentDidMount() {
     Logger.log('componentDidMount')
     this.canvas = new Canvas(this.refs.canvas)
@@ -29,14 +34,14 @@ class CanvasView extends React.Component {
     })
   }
 
-  _findBestImgSize(img) {
+  findBestImgSize(img) {
     let wScale = 1
     let hScale = 1
-    if (img.width > this.IM_MAX_WIDTH) {
-      wScale = img.width / this.IM_MAX_WIDTH
+    if (img.width > this.MAX_WIDTH) {
+      wScale = img.width / this.MAX_WIDTH
     }
-    if (img.height > this.IM_MAX_HEIGHT) {
-      hScale = img.height / this.IM_MAX_HEIGHT
+    if (img.height > this.MAX_HEIGHT) {
+      hScale = img.height / this.MAX_HEIGHT
     }
 
     this.scale = Math.max(wScale, hScale)
@@ -52,12 +57,15 @@ class CanvasView extends React.Component {
     this.canvas.setLineWidth(2)
   }
 
-  _onImgLoad(img, anno) {
-    this._findBestImgSize(img)
+  onImgLoad(img, anno, imgPath) {
+    this.findBestImgSize(img)
 
     this.canvas.drawImage(img, this.sWidth, this.sHeight)
     this.drawAnno(anno)
     this.img = img
+
+    const fileSize = io.fileSize(imgPath)
+    this.props.onImgLoad(img.width, img.height, fileSize)
   }
 
   updateCanvas(imgPath, anno) {
@@ -66,8 +74,8 @@ class CanvasView extends React.Component {
         this.imgPath = imgPath
         Logger.log(`Load image: ${imgPath}`)
         const img = new Image()
-        img.onload = () => {
-          this._onImgLoad(img, anno)
+        img.onload = e => {
+          this.onImgLoad(img, anno, imgPath)
         }
         img.src = new URL('file://' + imgPath)
       }
@@ -89,6 +97,8 @@ class CanvasView extends React.Component {
   }
 
   render() {
+    const { imgPath } = this.props
+
     return (
       <div className="canvas-wrapper">
         <canvas

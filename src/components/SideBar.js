@@ -8,8 +8,7 @@ const styles = theme => ({
   drawerPaper: {
     position: 'relative',
     width: drawerWidth
-  },
-  toolbar: theme.mixins.toolbar
+  }
 })
 
 class SideBar extends React.Component {
@@ -25,7 +24,7 @@ class SideBar extends React.Component {
         anchor={anchor}
       >
         {/* For Margin top */}
-        <div className={classes.toolbar} />
+        <div style={{ minHeight: 50 }} />
         {this.props.children}
       </Drawer>
     )

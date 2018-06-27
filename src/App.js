@@ -44,6 +44,9 @@ class App extends Component {
       voc: null,
       selectImgSet: '',
       selectImgIndex: 0,
+      selectImgWidth: 0,
+      selectImgHeight: 0,
+      selectImgSize: 0,
       mousePos: new Point()
     }
 
@@ -73,6 +76,14 @@ class App extends Component {
     this.setState({ selectImgIndex: imgIndex })
   }
 
+  onImgLoad = (width, height, fileSize) => {
+    this.setState({
+      selectImgWidth: width,
+      selectImgHeight: height,
+      selectImgSize: fileSize
+    })
+  }
+
   showImg(imgSetName, index = 0) {
     this.setState({
       selectImgIndex: index,
@@ -82,7 +93,15 @@ class App extends Component {
 
   render() {
     const { classes } = this.props
-    const { mousePos, voc, selectImgSet, selectImgIndex } = this.state
+    const {
+      mousePos,
+      voc,
+      selectImgSet,
+      selectImgIndex,
+      selectImgHeight,
+      selectImgWidth,
+      selectImgSize
+    } = this.state
 
     let imgPath = ''
     let vocAnno = null
@@ -100,6 +119,9 @@ class App extends Component {
         <LeftSideBar
           selectImgIndex={selectImgIndex}
           selectImgSet={selectImgSet}
+          selectImgWidth={selectImgWidth}
+          selectImgHeight={selectImgHeight}
+          selectImgSize={selectImgSize}
           onImgNameClick={this.onImgNameClick}
           onImgSetClick={this.onImgSetClick}
           voc={voc}
@@ -110,6 +132,7 @@ class App extends Component {
             imgPath={imgPath}
             vocAnno={vocAnno}
             onMouseMove={this.onCanvasMouseMove}
+            onImgLoad={this.onImgLoad}
           />
           <BottomBar mousePos={mousePos} />
         </main>

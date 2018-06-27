@@ -37,7 +37,16 @@ class LeftSideBar extends React.Component {
   }
 
   render() {
-    const { classes, selectImgSet, selectImgIndex, voc } = this.props
+    console.log('render leftsidebar')
+    const {
+      classes,
+      selectImgSet,
+      selectImgIndex,
+      voc,
+      selectImgHeight,
+      selectImgWidth,
+      selectImgSize
+    } = this.props
 
     let imgNames = null
     let imgSets = null
@@ -52,10 +61,16 @@ class LeftSideBar extends React.Component {
           <Grid item>
             <List dense subheader={<ListSubheader>Image info</ListSubheader>}>
               <ListItem>
-                <ListItemText primary="Size" secondary="1024 x 687" />
+                <ListItemText
+                  primary="Size"
+                  secondary={`${selectImgWidth}x${selectImgHeight}`}
+                />
               </ListItem>
               <ListItem>
-                <ListItemText primary="File Size" secondary="3.0mb" />
+                <ListItemText
+                  primary="File Size"
+                  secondary={`${selectImgSize} KB`}
+                />
               </ListItem>
             </List>
 
@@ -65,7 +80,7 @@ class LeftSideBar extends React.Component {
           {imgNames && (
             <Grid item>
               <List dense className={classes.imgNamesList} subheader={<li />}>
-                <ListSubheader>Image names</ListSubheader>
+                <ListSubheader>Image names({imgNames.length})</ListSubheader>
                 {imgNames.map((name, index) => (
                   <ListItem
                     key={name}
@@ -85,7 +100,8 @@ class LeftSideBar extends React.Component {
 
           {imgSets && (
             <Grid item>
-              <List dense subheader={<ListSubheader>Image sets</ListSubheader>}>
+              <List dense>
+                <ListSubheader>Image sets({imgSets.length})</ListSubheader>
                 {imgSets &&
                   imgSets.map(name => (
                     <ListItem
@@ -112,6 +128,8 @@ LeftSideBar.propTypes = {
   classes: PropTypes.object.isRequired,
   selectImgSet: PropTypes.string.isRequired,
   selectImgIndex: PropTypes.number.isRequired,
+  selectImgHeight: PropTypes.number.isRequired,
+  selectImgWidth: PropTypes.number.isRequired,
   voc: PropTypes.object
 }
 
