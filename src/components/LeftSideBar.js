@@ -19,46 +19,36 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
     position: 'relative',
     maxHeight: 300
-  }
+  },
+  listItemSelected: { background: '#e7e7e7' }
 })
 
 class LeftSideBar extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      imgSets: ['train', 'val', 'test'],
-      imgNames: [
-        'img_1.jpg',
-        'img_2.jpg',
-        'img_3.jpg',
-        'img_4.jpg',
-        'img_5.jpg',
-        'img_6.jpg',
-        'img_7.jpg',
-        'img_8.jpg',
-        'img_9.jpg',
-        'img_13.jpg',
-        'img_23.jpg',
-        'img_33.jpg',
-        'img_43.jpg',
-        'img_53.jpg'
-      ]
-    }
+  }
+
+  onImgSetClick = imgSetName => {
+    this.props.onImgSetClick(imgSetName)
+  }
+
+  onImgNameClick = imgIndex => {
+    this.props.onImgNameClick(imgIndex)
   }
 
   render() {
-    const { imgSets, imgNames } = this.state
-    const { classes } = this.props
+    const { classes, selectImgSet, selectImgIndex, voc } = this.props
+
+    let imgNames = null
+    let imgSets = null
+    if (voc != null && selectImgSet !== '') {
+      imgSets = voc.getImgSetNames()
+      imgNames = voc.getImgNames(selectImgSet)
+    }
 
     return (
       <SideBar anchor="left">
-        <Grid
-          container
-          spacing={0}
-          alignItems="stretch"
-          direction="column"
-          className={{ flexGrow: 1 }}
-        >
+        <Grid container spacing={0} alignItems="stretch" direction="column">
           <Grid item>
             <List dense subheader={<ListSubheader>Image info</ListSubheader>}>
               <ListItem>
@@ -72,27 +62,46 @@ class LeftSideBar extends React.Component {
             <Divider />
           </Grid>
 
-          <Grid item>
-            <List dense className={classes.imgNamesList} subheader={<li />}>
-              <ListSubheader>Images name</ListSubheader>
-              {imgNames.map(name => (
-                <ListItem key={name} button>
-                  <ListItemText primary={name} />
-                </ListItem>
-              ))}
-            </List>
-            <Divider />
-          </Grid>
+          {imgNames && (
+            <Grid item>
+              <List dense className={classes.imgNamesList} subheader={<li />}>
+                <ListSubheader>Image names</ListSubheader>
+                {imgNames.map((name, index) => (
+                  <ListItem
+                    key={name}
+                    button
+                    className={
+                      index === selectImgIndex ? classes.listItemSelected : ''
+                    }
+                    onClick={() => this.onImgNameClick(index)}
+                  >
+                    <ListItemText primary={name} />
+                  </ListItem>
+                ))}
+              </List>
+              <Divider />
+            </Grid>
+          )}
 
-          <Grid item>
-            <List dense subheader={<ListSubheader>Images sets</ListSubheader>}>
-              {imgSets.map(name => (
-                <ListItem key={name} button>
-                  <ListItemText primary={name} />
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
+          {imgSets && (
+            <Grid item>
+              <List dense subheader={<ListSubheader>Image sets</ListSubheader>}>
+                {imgSets &&
+                  imgSets.map(name => (
+                    <ListItem
+                      key={name}
+                      button
+                      className={
+                        name === selectImgSet ? classes.listItemSelected : ''
+                      }
+                      onClick={() => this.onImgSetClick(name)}
+                    >
+                      <ListItemText primary={name} />
+                    </ListItem>
+                  ))}
+              </List>
+            </Grid>
+          )}
         </Grid>
       </SideBar>
     )
@@ -100,7 +109,10 @@ class LeftSideBar extends React.Component {
 }
 
 LeftSideBar.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  selectImgSet: PropTypes.string.isRequired,
+  selectImgIndex: PropTypes.number.isRequired,
+  voc: PropTypes.object
 }
 
 export default withStyles(styles)(LeftSideBar)

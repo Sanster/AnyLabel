@@ -24,6 +24,14 @@ class Voc {
     this._loadImageSets()
   }
 
+  getImgSetNames() {
+    return Object.keys(this.imgSets)
+  }
+
+  getImgNames(imgSet) {
+    return this.imgSets[imgSet].imgNames
+  }
+
   _loadImageSets() {
     const names = io.listDir(this.imgSetDir)
     names.forEach(x => {
@@ -32,7 +40,7 @@ class Voc {
       const name = x.substring(0, x.length - 4)
       this.imgSets[name] = new ImageSets(name, lines)
     })
-    console.log(names)
+    // console.log(names)
   }
 
   // 通过 image sets 的索引来获得图片路径
@@ -43,7 +51,6 @@ class Voc {
 
   getVocAnnoByIndex(imgSetName, index) {
     const imgName = this.imgSets[imgSetName].imgNames[index]
-    console.log(imgName)
     const annoXmlPath = path.join(this.annoDir, `${imgName}.xml`)
     const data = io.readFileSync(annoXmlPath)
 

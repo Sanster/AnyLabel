@@ -41,9 +41,9 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      imgIndex: 0,
-      imgPath: '',
-      vocAnno: null,
+      voc: null,
+      selectImgSet: '',
+      selectImgIndex: 0,
       mousePos: new Point()
     }
 
@@ -58,18 +58,38 @@ class App extends Component {
   }
 
   onVocDirSelected = vocDir => {
-    this.voc = new Voc(vocDir)
-    const imgPath = this.voc.getImgPathByIndex('train', 0)
-    const vocAnno = this.voc.getVocAnnoByIndex('train', 0)
+    const voc = new Voc(vocDir)
+    this.setState({ voc: voc }, () => {
+      const selectImgSet = voc.getImgSetNames()[0]
+      this.showImg(selectImgSet, 0)
+    })
+  }
+
+  onImgSetClick = imgSetName => {
+    this.showImg(imgSetName, 0)
+  }
+
+  onImgNameClick = imgIndex => {
+    this.setState({ selectImgIndex: imgIndex })
+  }
+
+  showImg(imgSetName, index = 0) {
     this.setState({
-      imgPath: imgPath,
-      vocAnno: vocAnno
+      selectImgIndex: index,
+      selectImgSet: imgSetName
     })
   }
 
   render() {
     const { classes } = this.props
-    const { imgPath, vocAnno, mousePos } = this.state
+    const { mousePos, voc, selectImgSet, selectImgIndex } = this.state
+
+    let imgPath = ''
+    let vocAnno = null
+    if (voc != null && selectImgSet !== '') {
+      imgPath = voc.getImgPathByIndex(selectImgSet, selectImgIndex)
+      vocAnno = voc.getVocAnnoByIndex(selectImgSet, selectImgIndex)
+    }
 
     return (
       <div className={classes.root}>
@@ -77,7 +97,13 @@ class App extends Component {
           <TopBar onVocDirSelected={this.onVocDirSelected} />
         </AppBar>
 
-        <LeftSideBar />
+        <LeftSideBar
+          selectImgIndex={selectImgIndex}
+          selectImgSet={selectImgSet}
+          onImgNameClick={this.onImgNameClick}
+          onImgSetClick={this.onImgSetClick}
+          voc={voc}
+        />
 
         <main className={classes.content}>
           <CanvasView
