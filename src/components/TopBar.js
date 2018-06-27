@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
+import Toolbar from '@material-ui/core/Toolbar'
 import './TopBar.css'
 
 const electron = window.require('electron')
@@ -19,15 +20,17 @@ class TopBar extends React.Component {
   render() {
     return (
       <div id="topbar">
-        <div id="tool-bar">
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => this.handleSelectVoc()}
-          >
-            Voc
-          </Button>
-        </div>
+        <Toolbar>
+          <div id="tool-bar">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.handleSelectVoc()}
+            >
+              Voc
+            </Button>
+          </div>
+        </Toolbar>
       </div>
     )
   }

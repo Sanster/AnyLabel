@@ -74,9 +74,7 @@ class App extends Component {
     return (
       <div className={classes.root}>
         <AppBar position="absolute" className={classes.appBar}>
-          <Toolbar>
-            {/* <TopBar onVocDirSelected={this.onVocDirSelected} /> */}
-          </Toolbar>
+          <TopBar onVocDirSelected={this.onVocDirSelected} />
         </AppBar>
 
         <LeftSideBar />
