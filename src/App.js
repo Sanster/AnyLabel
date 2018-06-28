@@ -47,6 +47,7 @@ class App extends Component {
       selectImgWidth: 0,
       selectImgHeight: 0,
       selectImgSize: 0,
+      selectVocObjIndex: 0,
       mousePos: new Point()
     }
 
@@ -76,6 +77,10 @@ class App extends Component {
     this.setState({ selectImgIndex: imgIndex })
   }
 
+  onVocObjClick = vocObjIndex => {
+    this.setState({ selectVocObjIndex: vocObjIndex })
+  }
+
   onImgLoad = (width, height, fileSize) => {
     this.setState({
       selectImgWidth: width,
@@ -100,7 +105,8 @@ class App extends Component {
       selectImgIndex,
       selectImgHeight,
       selectImgWidth,
-      selectImgSize
+      selectImgSize,
+      selectVocObjIndex
     } = this.state
 
     let imgPath = ''
@@ -137,7 +143,11 @@ class App extends Component {
           <BottomBar mousePos={mousePos} />
         </main>
 
-        <RightSideBar />
+        <RightSideBar
+          vocAnno={vocAnno}
+          selectVocObjIndex={selectVocObjIndex}
+          onVocObjClick={this.onVocObjClick}
+        />
       </div>
     )
   }
