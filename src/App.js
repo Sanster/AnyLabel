@@ -139,6 +139,7 @@ class App extends Component {
             vocAnno={vocAnno}
             onMouseMove={this.onCanvasMouseMove}
             onImgLoad={this.onImgLoad}
+            selectVocObjIndex={selectVocObjIndex}
           />
           <BottomBar mousePos={mousePos} />
         </main>

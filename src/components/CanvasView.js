@@ -28,9 +28,15 @@ class CanvasView extends React.Component {
   drawAnno(anno) {
     if (anno == null) return
 
+    const { selectVocObjIndex } = this.props
+
     Logger.log(`Object num: ${anno.objs.length}`)
-    anno.objs.forEach(obj => {
-      this.canvas.drawRect(obj.rect, this.scale)
+    anno.objs.forEach((obj, index) => {
+      if (index === selectVocObjIndex) {
+        this.canvas.drawRect(obj.rect, this.scale, true)
+      } else {
+        this.canvas.drawRect(obj.rect, this.scale)
+      }
     })
   }
 
@@ -114,7 +120,8 @@ class CanvasView extends React.Component {
 CanvasView.propTypes = {
   imgPath: PropTypes.string,
   vocAnno: PropTypes.instanceOf(VocAnno),
-  onMouseMove: PropTypes.func
+  onMouseMove: PropTypes.func,
+  selectVocObjIndex: PropTypes.number
 }
 
 export default CanvasView
