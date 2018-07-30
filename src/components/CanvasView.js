@@ -32,10 +32,8 @@ class CanvasView extends React.Component {
   drawAnno(anno) {
     if (anno == null) return
 
-    const { selectVocObjIndex } = this.props
-
     anno.objs.forEach((obj, index) => {
-      if (index === selectVocObjIndex) {
+      if (index === this.selectVocObjIndex) {
         this.canvas.drawRect(obj.rect, this.scale, true)
       }
 
