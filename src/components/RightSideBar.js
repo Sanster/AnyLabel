@@ -11,7 +11,19 @@ import SideBar from './SideBar'
 import './LeftSideBar.css'
 
 const styles = theme => ({
-  listItemSelected: { background: '#e7e7e7' }
+  listItemSelected: { background: '#e7e7e7' },
+  listItem: {
+    paddingTop: 6,
+    paddingBottom: 6
+  },
+  listItemSelected: {
+    paddingTop: 6,
+    paddingBottom: 6,
+    background: '#e7e7e7'
+  },
+  listTitle: {
+    lineHeight: '36px'
+  }
 })
 
 class RightSideBar extends React.Component {
@@ -41,7 +53,9 @@ class RightSideBar extends React.Component {
           {vocObjs && (
             <Grid item>
               <List dense subheader={<li />}>
-                <ListSubheader>Labels({vocObjs.length})</ListSubheader>
+                <ListSubheader className={classes.listTitle}>
+                  Labels({vocObjs.length})
+                </ListSubheader>
                 {vocObjs.map((vocObj, index) => (
                   <ListItem
                     key={index}
@@ -50,7 +64,7 @@ class RightSideBar extends React.Component {
                     className={
                       index === selectVocObjIndex
                         ? classes.listItemSelected
-                        : ''
+                        : classes.listItem
                     }
                   >
                     <ListItemText primary={this.objString(vocObj)} />
