@@ -71,7 +71,6 @@ class RightSideBar extends React.Component {
                   </ListItem>
                 ))}
               </List>
-              <Divider />
             </Grid>
           )}
         </Grid>
