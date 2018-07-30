@@ -39,7 +39,10 @@ class Canvas {
 
   setStrokeColor(r, g, b) {
     this.ctx.strokeStyle = `rgb(${r},${g},${b})`
-    this.ctx.strokeStyle = `rgb(0,255,0)`
+  }
+
+  setFillColor(r, g, b, a) {
+    this.ctx.fillStyle = `rgba(${r},${g},${b},0.3)`
   }
 }
 

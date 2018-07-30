@@ -34,13 +34,12 @@ class CanvasView extends React.Component {
 
     const { selectVocObjIndex } = this.props
 
-    Logger.log(`Object num: ${anno.objs.length}`)
     anno.objs.forEach((obj, index) => {
       if (index === selectVocObjIndex) {
         this.canvas.drawRect(obj.rect, this.scale, true)
-      } else {
-        this.canvas.drawRect(obj.rect, this.scale)
       }
+
+      this.canvas.drawRect(obj.rect, this.scale)
     })
   }
 
@@ -64,6 +63,7 @@ class CanvasView extends React.Component {
     // strokeStype will be reset after set width/height
     // so we need to reset here
     this.canvas.setStrokeColor(0, 255, 0)
+    this.canvas.setFillColor(0, 0, 255)
     this.canvas.setLineWidth(2)
   }
 
@@ -79,6 +79,7 @@ class CanvasView extends React.Component {
 
   updateCanvas(imgPath, anno, selectVocObjIndex) {
     if (!io.exists(imgPath)) return
+
     if (this.img == null || imgPath !== this.imgPath) {
       this.anno = anno
       this.imgPath = imgPath
