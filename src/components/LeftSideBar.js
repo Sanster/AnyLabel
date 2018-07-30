@@ -167,7 +167,7 @@ class LeftSideBar extends React.Component {
                 nextIconButtonProps={{
                   'aria-label': 'Next Page'
                 }}
-                rowsPerPageOptions={rowsPerPage}
+                rowsPerPageOptions={[rowsPerPage]}
                 onChangePage={this.handleChangePage}
                 onChangeRowsPerPage={this.handleChangeRowsPerPage}
               />

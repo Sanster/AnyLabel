@@ -78,6 +78,7 @@ class App extends Component {
   }
 
   onVocObjClick = vocObjIndex => {
+    console.log('App.js onVocObjClick')
     this.setState({ selectVocObjIndex: vocObjIndex })
   }
 
