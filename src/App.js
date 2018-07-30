@@ -69,17 +69,25 @@ class App extends Component {
     this.setState({ mousePos: _mousePos })
   }
 
+  resetImgSet = imgSetName => {
+    this.setState({
+      selectImgIndex: 0,
+      selectImgSet: imgSetName,
+      selectVocObjIndex: 0
+    })
+  }
+
   onVocDirSelected = vocDir => {
     const voc = new Voc(vocDir)
     this.setState({ voc: voc }, () => {
       const selectImgSet = voc.getImgSetNames()[0]
       this.numImg = this.state.voc.getImgNames(selectImgSet).length
-      this.showImg(selectImgSet, 0)
+      this.resetImgSet(selectImgSet)
     })
   }
 
   onImgSetClick = imgSetName => {
-    this.showImg(imgSetName, 0)
+    this.resetImgSet(imgSetName)
     this.numImg = this.state.voc.getImgNames(imgSetName).length
   }
 
@@ -97,13 +105,6 @@ class App extends Component {
       selectImgWidth: width,
       selectImgHeight: height,
       selectImgSize: fileSize
-    })
-  }
-
-  showImg(imgSetName, index = 0) {
-    this.setState({
-      selectImgIndex: index,
-      selectImgSet: imgSetName
     })
   }
 
