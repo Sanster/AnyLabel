@@ -13,7 +13,11 @@ class CanvasView extends React.Component {
     super(props)
     this.MAX_WIDTH = 750
     this.MAX_HEIGHT = 600
+    this.img = null
+    this.imgPath = null
+    this.selectVocObjIndex = props.selectVocObjIndex
   }
+
   componentDidMount() {
     Logger.log('componentDidMount')
     this.canvas = new Canvas(this.refs.canvas)
@@ -22,7 +26,7 @@ class CanvasView extends React.Component {
 
   componentWillReceiveProps(props) {
     Logger.log('CanvasView componentWillReceiveProps')
-    this.updateCanvas(props.imgPath, props.vocAnno)
+    this.updateCanvas(props.imgPath, props.vocAnno, props.selectVocObjIndex)
   }
 
   drawAnno(anno) {
@@ -63,28 +67,34 @@ class CanvasView extends React.Component {
     this.canvas.setLineWidth(2)
   }
 
-  onImgLoad(img, anno, imgPath) {
-    this.findBestImgSize(img)
+  onImgLoad() {
+    this.findBestImgSize(this.img)
 
-    this.canvas.drawImage(img, this.sWidth, this.sHeight)
-    this.drawAnno(anno)
-    this.img = img
+    this.canvas.drawImage(this.img, this.sWidth, this.sHeight)
+    this.drawAnno(this.anno)
 
-    const fileSize = io.fileSize(imgPath)
-    this.props.onImgLoad(img.width, img.height, fileSize)
+    const fileSize = io.fileSize(this.imgPath)
+    this.props.onImgLoad(this.img.width, this.img.height, fileSize)
   }
 
-  updateCanvas(imgPath, anno) {
-    if (io.exists(imgPath)) {
-      if (this.img == null || imgPath !== this.imgPath) {
-        this.imgPath = imgPath
-        Logger.log(`Load image: ${imgPath}`)
-        const img = new Image()
-        img.onload = e => {
-          this.onImgLoad(img, anno, imgPath)
-        }
-        img.src = new URL('file://' + imgPath)
+  updateCanvas(imgPath, anno, selectVocObjIndex) {
+    if (!io.exists(imgPath)) return
+    if (this.img == null || imgPath !== this.imgPath) {
+      this.anno = anno
+      this.imgPath = imgPath
+
+      Logger.log(`Load image: ${imgPath}`)
+      const img = new Image()
+      img.onload = e => {
+        this.img = img
+        this.onImgLoad()
       }
+      img.src = new URL('file://' + imgPath)
+    }
+
+    if (selectVocObjIndex != this.selectVocObjIndex) {
+      this.selectVocObjIndex = selectVocObjIndex
+      this.onImgLoad()
     }
   }
 
@@ -103,8 +113,6 @@ class CanvasView extends React.Component {
   }
 
   render() {
-    const { imgPath } = this.props
-
     return (
       <div className="canvas-wrapper">
         <canvas
