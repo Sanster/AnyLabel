@@ -56,6 +56,15 @@ class LeftSideBar extends React.Component {
     }
   }
 
+  componentWillReceiveProps(props) {
+    const { rowsPerPage } = this.state
+    if (props.selectImgIndex + 1 > rowsPerPage) {
+      this.setState({
+        page: props.selectImgIndex + (1 % rowsPerPage)
+      })
+    }
+  }
+
   onImgSetClick = imgSetName => {
     this.props.onImgSetClick(imgSetName)
   }
@@ -78,20 +87,14 @@ class LeftSideBar extends React.Component {
       classes,
       selectImgSet,
       selectImgIndex,
-      voc,
+      imgSets,
+      imgNames,
       selectImgHeight,
       selectImgWidth,
       selectImgSize
     } = this.props
 
     const { rowsPerPage, page } = this.state
-
-    let imgNames = null
-    let imgSets = null
-    if (voc != null && selectImgSet !== '') {
-      imgSets = voc.getImgSetNames()
-      imgNames = voc.getImgNames(selectImgSet)
-    }
 
     return (
       <SideBar anchor="left">
@@ -142,7 +145,7 @@ class LeftSideBar extends React.Component {
                       key={name}
                       button
                       className={
-                        index === selectImgIndex
+                        index % rowsPerPage === selectImgIndex % rowsPerPage
                           ? classes.listItemSelected
                           : classes.listItem
                       }
@@ -211,7 +214,8 @@ LeftSideBar.propTypes = {
   selectImgIndex: PropTypes.number.isRequired,
   selectImgHeight: PropTypes.number.isRequired,
   selectImgWidth: PropTypes.number.isRequired,
-  voc: PropTypes.object
+  imgNames: PropTypes.array.isRequired,
+  imgSets: PropTypes.array.isRequired
 }
 
 export default withStyles(styles)(LeftSideBar)

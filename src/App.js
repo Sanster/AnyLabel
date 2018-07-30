@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Mousetrap from 'mousetrap'
 import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 
@@ -52,6 +53,13 @@ class App extends Component {
     }
 
     this.voc = null
+    this.numImg = 0
+    this.bindKey()
+  }
+
+  bindKey = () => {
+    Mousetrap.bind('left', this.showPrevImg)
+    Mousetrap.bind('right', this.showNextImg)
   }
 
   onCanvasMouseMove = (x, y) => {
@@ -65,12 +73,14 @@ class App extends Component {
     const voc = new Voc(vocDir)
     this.setState({ voc: voc }, () => {
       const selectImgSet = voc.getImgSetNames()[0]
+      this.numImg = this.state.voc.getImgNames(selectImgSet).length
       this.showImg(selectImgSet, 0)
     })
   }
 
   onImgSetClick = imgSetName => {
     this.showImg(imgSetName, 0)
+    this.numImg = this.state.voc.getImgNames(imgSetName).length
   }
 
   onImgNameClick = imgIndex => {
@@ -78,7 +88,7 @@ class App extends Component {
   }
 
   onVocObjClick = vocObjIndex => {
-    console.log('App.js onVocObjClick')
+    console.log(`App.js onVocObjClick: ${vocObjIndex}`)
     this.setState({ selectVocObjIndex: vocObjIndex })
   }
 
@@ -97,8 +107,23 @@ class App extends Component {
     })
   }
 
+  showNextImg = () => {
+    const { selectImgIndex } = this.state
+    if (selectImgIndex < this.numImg - 1) {
+      this.setState({ selectImgIndex: selectImgIndex + 1 })
+    }
+  }
+
+  showPrevImg = () => {
+    const { selectImgIndex } = this.state
+    if (selectImgIndex >= 1) {
+      this.setState({ selectImgIndex: selectImgIndex - 1 })
+    }
+  }
+
   render() {
     const { classes } = this.props
+
     const {
       mousePos,
       voc,
@@ -112,9 +137,13 @@ class App extends Component {
 
     let imgPath = ''
     let vocAnno = null
+    let imgNames = null
+    let imgSets = null
     if (voc != null && selectImgSet !== '') {
       imgPath = voc.getImgPathByIndex(selectImgSet, selectImgIndex)
       vocAnno = voc.getVocAnnoByIndex(selectImgSet, selectImgIndex)
+      imgSets = voc.getImgSetNames()
+      imgNames = voc.getImgNames(selectImgSet)
     }
 
     return (
@@ -129,9 +158,10 @@ class App extends Component {
           selectImgWidth={selectImgWidth}
           selectImgHeight={selectImgHeight}
           selectImgSize={selectImgSize}
+          imgSets={imgSets}
+          imgNames={imgNames}
           onImgNameClick={this.onImgNameClick}
           onImgSetClick={this.onImgSetClick}
-          voc={voc}
         />
 
         <main className={classes.content}>

@@ -14,7 +14,7 @@ function listDir(dir, suffix = '.txt') {
 
 function readLines(filePath) {
   const data = fs.readFileSync(filePath, 'utf8')
-  const header = data.split(/\n/)
+  const header = data.trim().split(/\n/)
   return header
 }
 
