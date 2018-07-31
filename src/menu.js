@@ -15,23 +15,29 @@ class MenuBuilder {
   }
 
   buildDefaultTemplate() {
-    const templateDefault = [
-      //   {
-      //     label: '&File',
-      //     submenu: [
-      //       {
-      //         label: '&Open Voc',
-      //         accelerator: 'Ctrl+O'
-      //       }
-      //     ]
-      //   },
+    const template = [
+      {
+        label: '&File',
+        submenu: [
+          {
+            label: '&Open Voc Dataset'
+          }
+        ]
+      },
       {
         label: '&Dev',
         submenu: [{ role: 'reload' }, { role: 'toggledevtools' }]
       }
     ]
 
-    return templateDefault
+    if (process.platform === 'darwin') {
+      template.unshift({
+        label: 'AnyLabel',
+        submenu: [{ role: 'about' }, { role: 'quit' }]
+      })
+    }
+
+    return template
   }
 }
 
