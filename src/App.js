@@ -104,7 +104,10 @@ class App extends Component {
   }
 
   onImgNameClick = imgIndex => {
-    this.setState({ selectImgIndex: imgIndex })
+    this.setState({
+      selectImgIndex: imgIndex,
+      selectVocObjIndex: 0
+    })
   }
 
   onVocObjClick = vocObjIndex => {
