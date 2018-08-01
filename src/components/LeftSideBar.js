@@ -57,11 +57,10 @@ class LeftSideBar extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    const { rowsPerPage } = this.state
-    if (props.selectImgIndex + 1 > rowsPerPage) {
-      this.setState({
-        page: props.selectImgIndex + (1 % rowsPerPage)
-      })
+    const { page, rowsPerPage } = this.state
+    const newPage = Math.floor(props.selectImgIndex / rowsPerPage)
+    if (newPage !== page) {
+      this.setState({ page: newPage })
     }
   }
 
