@@ -1,4 +1,5 @@
 const { app, Menu, shell, BrowserWindow } = require('electron')
+const WindowService = require('./main_process/WindowService')
 
 class MenuBuilder {
   constructor(mainWindow) {
@@ -20,7 +21,13 @@ class MenuBuilder {
         label: '&File',
         submenu: [
           {
-            label: '&Open Voc Dataset'
+            label: '&Open Voc Dataset',
+            click: () => {
+              const vocDir = WindowService.pickVocDir()
+              if (vocDir) {
+                this.mainWindow.webContents.send('open-voc', vocDir)
+              }
+            }
           }
         ]
       },

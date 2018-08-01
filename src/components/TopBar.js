@@ -8,37 +8,17 @@ const electron = window.require('electron')
 const dialog = electron.remote.dialog
 
 class TopBar extends React.Component {
-  handleSelectVoc() {
-    // const selectedDir = dialog.showOpenDialog({ properties: ['openDirectory'] })
-    // if (selectedDir) {
-    //   console.log(selectedDir)
-    //   //   TODO: check voc valid
-    //   this.props.onVocDirSelected(selectedDir[0])
-    // }
-    this.props.onVocDirSelected('/home/cwq/data/VOCdevkit2007/VOC2007')
-  }
-
   render() {
     return (
       <div id="topbar">
         <Toolbar>
-          <div id="tool-bar">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => this.handleSelectVoc()}
-            >
-              Voc
-            </Button>
-          </div>
+          <div id="tool-bar" />
         </Toolbar>
       </div>
     )
   }
 }
 
-TopBar.propTypes = {
-  onVocDirSelected: PropTypes.func
-}
+TopBar.propTypes = {}
 
 export default TopBar

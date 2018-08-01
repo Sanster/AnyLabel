@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import Mousetrap from 'mousetrap'
 import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
-
 import TopBar from './components/TopBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import LeftSideBar from './components/LeftSideBar'
@@ -12,6 +11,7 @@ import BottomBar from './components/BottomBar'
 import Point from './models/Point'
 import Voc from './libs/Voc'
 import './App.css'
+const ipcRenderer = window.require('electron').ipcRenderer
 
 const drawerWidth = 240
 
@@ -55,11 +55,19 @@ class App extends Component {
     this.voc = null
     this.numImg = 0
     this.bindKey()
+    this.registerIpc()
   }
 
   bindKey = () => {
     Mousetrap.bind('left', this.showPrevImg)
     Mousetrap.bind('right', this.showNextImg)
+  }
+
+  registerIpc = () => {
+    ipcRenderer.on('open-voc', (event, vocDir) => {
+      console.log(vocDir)
+      this.onVocDirSelected(vocDir)
+    })
   }
 
   onCanvasMouseMove = (x, y) => {
@@ -150,7 +158,7 @@ class App extends Component {
     return (
       <div className={classes.root}>
         <AppBar position="absolute" className={classes.appBar}>
-          <TopBar onVocDirSelected={this.onVocDirSelected} />
+          <TopBar />
         </AppBar>
 
         <LeftSideBar
