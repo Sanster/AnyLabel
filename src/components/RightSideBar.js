@@ -7,6 +7,8 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import Grid from '@material-ui/core/Grid'
+
+import ListHeader from './base/ListHeader'
 import SideBar from './SideBar'
 import './LeftSideBar.css'
 
@@ -20,9 +22,6 @@ const styles = theme => ({
     paddingTop: 6,
     paddingBottom: 6,
     background: '#e7e7e7'
-  },
-  listTitle: {
-    lineHeight: '36px'
   }
 })
 
@@ -60,9 +59,7 @@ class RightSideBar extends React.Component {
           {vocObjs && (
             <Grid item>
               <List dense subheader={<li />}>
-                <ListSubheader className={classes.listTitle}>
-                  Labels({vocObjs.length})
-                </ListSubheader>
+                <ListHeader text={`Labels(${vocObjs.length})`} />
                 {vocObjs.map((vocObj, index) => (
                   <ListItem
                     key={index}

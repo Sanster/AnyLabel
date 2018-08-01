@@ -8,7 +8,9 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import TablePagination from '@material-ui/core/TablePagination'
 import Grid from '@material-ui/core/Grid'
+
 import SideBar from './SideBar'
+import ListHeader from './base/ListHeader'
 import './LeftSideBar.css'
 
 const styles = theme => ({
@@ -37,9 +39,6 @@ const styles = theme => ({
     paddingTop: 6,
     paddingBottom: 6,
     background: '#e7e7e7'
-  },
-  listTitle: {
-    lineHeight: '36px'
   },
   pagination: {
     minHeight: '32px',
@@ -106,9 +105,7 @@ class LeftSideBar extends React.Component {
         >
           <Grid item>
             <List dense disablePadding>
-              <ListSubheader className={classes.listTitle}>
-                Image info
-              </ListSubheader>
+              <ListHeader text="Image info" />
               <ListItem>
                 <ListItemText
                   primary="Size"
@@ -134,9 +131,7 @@ class LeftSideBar extends React.Component {
                 className={classes.imgNamesList}
                 subheader={<li />}
               >
-                <ListSubheader className={classes.listTitle}>
-                  Image names
-                </ListSubheader>
+                <ListHeader text="Image names" />
                 {imgNames
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((name, index) => (
@@ -180,9 +175,7 @@ class LeftSideBar extends React.Component {
           {imgSets && (
             <Grid item>
               <List dense disablePadding className={classes.imgSetsList}>
-                <ListSubheader className={classes.listTitle}>
-                  Image sets
-                </ListSubheader>
+                <ListHeader text="Image sets" />
                 {imgSets &&
                   imgSets.map(name => (
                     <ListItem

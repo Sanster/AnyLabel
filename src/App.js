@@ -52,7 +52,9 @@ class App extends Component {
       selectImgSize: 0,
       selectVocObjIndex: 0,
       mousePos: new Point(),
-      vocObjDeleteDialogOpen: false
+      vocObjDeleteDialogOpen: false,
+      vocObjChanged: false, // Object 是否有删除或添加
+      imgSetChanged: false // 图片集合是否有删除
     }
 
     this.voc = null
