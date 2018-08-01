@@ -35,8 +35,8 @@ class RightSideBar extends React.Component {
     return `${vocObj.name} [${rect.x1},${rect.y1},${rect.width},${rect.height}]`
   }
 
-  onVocObjClick = vocObjIndex => {
-    this.props.onVocObjClick(vocObjIndex)
+  onVocObjClick = vocObj => {
+    this.props.onVocObjClick(vocObj)
   }
 
   onKeyPress = event => {
@@ -69,7 +69,7 @@ class RightSideBar extends React.Component {
                     key={index}
                     button
                     onClick={() => this.onVocObjClick(index)}
-                    onKeyPress={event => this.onKeyPress(event, index)}
+                    onKeyPress={event => this.onKeyPress(event, vocObj)}
                     className={
                       index === selectVocObjIndex
                         ? classes.listItemSelected

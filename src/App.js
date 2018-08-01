@@ -66,6 +66,7 @@ class App extends Component {
   bindKey = () => {
     Mousetrap.bind('left', this.showPrevImg)
     Mousetrap.bind('right', this.showNextImg)
+    Mousetrap.bind('ctrl+s', this.saveVocAnno)
   }
 
   registerIpc = () => {
@@ -88,6 +89,13 @@ class App extends Component {
       selectImgSet: imgSetName,
       selectVocObjIndex: 0
     })
+  }
+
+  saveVocAnno = () => {
+    const { vocObjChanged, imgSetChanged } = this.state
+    if (vocObjChanged || imgSetChanged) {
+      this.voc.saveVocAnno()
+    }
   }
 
   onVocDirSelected = vocDir => {
