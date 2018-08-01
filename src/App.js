@@ -144,7 +144,12 @@ class App extends Component {
   handleDeleteVocObjDialogClose = isDelete => {
     this.setState({ vocObjDeleteDialogOpen: false })
     if (isDelete) {
-      const { selectVocObjIndex, selectImgSet, selectImgIndex } = this.state
+      const {
+        selectVocObjIndex,
+        selectImgSet,
+        selectImgIndex,
+        vocObjChanged
+      } = this.state
       console.log(`Delete voc object ${selectVocObjIndex}`)
 
       this.voc.deleteVocAnnoObjByIndex(selectVocObjIndex)
@@ -152,6 +157,8 @@ class App extends Component {
       if (selectVocObjIndex !== 0) {
         this.setState({ selectVocObjIndex: selectVocObjIndex - 1 })
       }
+
+      this.setState({ vocObjChanged: true })
     }
   }
 
@@ -165,7 +172,8 @@ class App extends Component {
       selectImgHeight,
       selectImgWidth,
       selectImgSize,
-      selectVocObjIndex
+      selectVocObjIndex,
+      vocObjChanged
     } = this.state
 
     let imgPath = ''
@@ -211,6 +219,7 @@ class App extends Component {
         <RightSideBar
           vocAnno={vocAnno}
           selectVocObjIndex={selectVocObjIndex}
+          vocObjChanged={vocObjChanged}
           onVocObjClick={this.onVocObjClick}
           onDeleteVocObj={this.onDeleteVocObj}
         />

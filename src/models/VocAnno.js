@@ -10,6 +10,14 @@ class VocAnno {
     this._parseXmlJson()
   }
 
+  _init() {
+    this.objs = []
+    // Image size
+    this.size = null
+    this.filename = ''
+    this.deleteObjIndexes = []
+  }
+
   deleteObj(objIndex) {
     this.deleteObjIndexes.push(objIndex)
   }
@@ -34,13 +42,13 @@ class VocAnno {
     )
   }
 
+  getDeletedObjCount() {
+    return this.deleteObjIndexes.length
+  }
+
   // 每次解析 xmlJson，相当于初始化
   _parseXmlJson() {
-    this.objs = []
-    // Image size
-    this.size = null
-    this.filename = ''
-    this.deleteObjIndexes = []
+    this._init()
 
     const annotation = this.xmlJson.annotation
     const annSize = annotation.size[0]

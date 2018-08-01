@@ -46,11 +46,12 @@ class RightSideBar extends React.Component {
   }
 
   render() {
-    const { vocAnno, selectVocObjIndex, classes } = this.props
+    const { vocAnno, selectVocObjIndex, vocObjChanged, classes } = this.props
     let vocObjs = null
+    let deletedObjCount = 0
     if (vocAnno != null) {
       vocObjs = vocAnno.getObjs()
-      console.log(vocObjs)
+      deletedObjCount = vocAnno.getDeletedObjCount()
     }
 
     return (
@@ -59,7 +60,10 @@ class RightSideBar extends React.Component {
           {vocObjs && (
             <Grid item>
               <List dense subheader={<li />}>
-                <ListHeader text={`Labels(${vocObjs.length})`} />
+                <ListHeader
+                  text={`Labels(${vocObjs.length})`}
+                  value={deletedObjCount}
+                />
                 {vocObjs.map((vocObj, index) => (
                   <ListItem
                     key={index}
