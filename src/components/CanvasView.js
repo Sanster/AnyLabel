@@ -15,7 +15,7 @@ class CanvasView extends React.Component {
     this.MAX_HEIGHT = 600
     this.img = null
     this.imgPath = null
-    this.selectVocObjIndex = props.selectVocObjIndex
+    this.selectVocObjId = props.selectVocObjId
   }
 
   componentDidMount() {
@@ -26,14 +26,14 @@ class CanvasView extends React.Component {
 
   componentWillReceiveProps(props) {
     Logger.log('CanvasView componentWillReceiveProps')
-    this.updateCanvas(props.imgPath, props.vocAnno, props.selectVocObjIndex)
+    this.updateCanvas(props.imgPath, props.vocAnno, props.selectVocObjId)
   }
 
   drawAnno(anno) {
     if (anno == null) return
 
-    anno.objs.forEach((obj, index) => {
-      if (index === this.selectVocObjIndex) {
+    anno.getObjs().forEach((obj, index) => {
+      if (obj.id === this.selectVocObjId) {
         this.canvas.drawRect(obj.rect, this.scale, true)
       }
 
@@ -75,7 +75,7 @@ class CanvasView extends React.Component {
     this.props.onImgLoad(this.img.width, this.img.height, fileSize)
   }
 
-  updateCanvas(imgPath, anno, selectVocObjIndex) {
+  updateCanvas(imgPath, anno, selectVocObjId) {
     if (!io.exists(imgPath)) return
 
     if (this.img == null || imgPath !== this.imgPath) {
@@ -91,9 +91,10 @@ class CanvasView extends React.Component {
       img.src = new URL('file://' + imgPath)
     }
 
-    if (selectVocObjIndex != this.selectVocObjIndex) {
-      this.selectVocObjIndex = selectVocObjIndex
-      this.onImgLoad()
+    if (selectVocObjId != this.selectVocObjId) {
+      this.selectVocObjId = selectVocObjId
+      this.canvas.drawImage(this.img, this.sWidth, this.sHeight)
+      this.drawAnno(this.anno)
     }
   }
 

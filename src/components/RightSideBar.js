@@ -39,14 +39,15 @@ class RightSideBar extends React.Component {
     this.props.onVocObjClick(vocObj)
   }
 
-  onKeyPress = event => {
+  onKeyDown = event => {
+    console.log(event)
     if (event.key === 'Delete') {
       this.props.onDeleteVocObj()
     }
   }
 
   render() {
-    const { vocAnno, selectVocObjIndex, vocObjChanged, classes } = this.props
+    const { vocAnno, selectVocObjId, classes } = this.props
     let vocObjs = null
     let deletedObjCount = 0
     if (vocAnno != null) {
@@ -66,12 +67,12 @@ class RightSideBar extends React.Component {
                 />
                 {vocObjs.map((vocObj, index) => (
                   <ListItem
-                    key={index}
+                    key={vocObj.id}
                     button
-                    onClick={() => this.onVocObjClick(index)}
-                    onKeyPress={event => this.onKeyPress(event, vocObj)}
+                    onClick={() => this.onVocObjClick(vocObj)}
+                    onKeyDown={event => this.onKeyDown(event)}
                     className={
-                      index === selectVocObjIndex
+                      vocObj.id === selectVocObjId
                         ? classes.listItemSelected
                         : classes.listItem
                     }

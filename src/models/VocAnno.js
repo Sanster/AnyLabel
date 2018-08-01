@@ -11,25 +11,25 @@ class VocAnno {
   }
 
   _init() {
-    this.objs = []
+    this.objs = new Map()
     // Image size
     this.size = null
     this.filename = ''
-    this.deleteObjKeys = []
+    this.deleteObjIds = []
   }
 
   deleteObj(objKey) {
-    this.deleteObjKeys.push(objKey)
+    this.deleteObjIds.push(objKey)
   }
 
   unDeleteObj() {
-    this.deleteObjKeys.pop()
+    this.deleteObjIds.pop()
   }
 
   // 根据 deleteObjKeys 操作原始数据
   getXmlJson() {
     const filteredObjs = this.xmlJson.annotation.object.filter(
-      (obj, index) => !this.deleteObjKeys.includes(index)
+      (obj, index) => !this.deleteObjIds.includes(index)
     )
     this.xmlJson.annotation.object = filteredObjs
     return this.xmlJson
@@ -37,11 +37,30 @@ class VocAnno {
 
   // 根据 deleteObjKeys 返回 objs
   getObjs() {
-    return this.objs.filter(obj => !this.deleteObjKeys.includes(obj.key))
+    const res = []
+    this.objs.forEach((obj, id) => {
+      if (!this.deleteObjIds.includes(obj.id)) {
+        res.push(obj)
+      }
+    })
+    return res
+  }
+
+  getNextObjId(objId) {
+    let objs = this.getObjs()
+    objs.sort((x, y) => x.id - y.id)
+
+    for (let i = 0; i < objs.length; i++) {
+      if (objs[i].id > objId) {
+        return objs[i].id
+      }
+    }
+
+    return objs[objs.length - 1].id
   }
 
   getDeletedObjCount() {
-    return this.deleteObjKeys.length
+    return this.deleteObjIds.length
   }
 
   // 每次解析 xmlJson，相当于初始化
@@ -57,7 +76,7 @@ class VocAnno {
       const box = obj.bndbox[0]
       const truncated = obj.truncated[0] === 1 ? true : false
       const rect = new Rect(box.xmin[0], box.ymin[0], box.xmax[0], box.ymax[0])
-      this.objs.push(new VocObj(obj.name[0], truncated, rect, index))
+      this.objs.set(index, new VocObj(obj.name[0], truncated, rect, index))
     })
   }
 }

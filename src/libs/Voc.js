@@ -85,8 +85,8 @@ class Voc {
     return this.curAnno
   }
 
-  deleteVocAnnoObjByIndex(objIndex) {
-    this.curAnno.deleteObj(objIndex)
+  deleteVocAnnoObjById(objId) {
+    this.curAnno.deleteObj(objId)
   }
 
   saveVocAnno() {

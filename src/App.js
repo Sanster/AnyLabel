@@ -50,7 +50,7 @@ class App extends Component {
       selectImgWidth: 0,
       selectImgHeight: 0,
       selectImgSize: 0,
-      selectVocObjIndex: 0,
+      selectVocObjId: 0,
       mousePos: new Point(),
       vocObjDeleteDialogOpen: false,
       vocObjChanged: false, // Object 是否有删除或添加
@@ -118,9 +118,9 @@ class App extends Component {
     })
   }
 
-  onVocObjClick = vocObjIndex => {
-    console.log(`App.js onVocObjClick: ${vocObjIndex}`)
-    this.setState({ selectVocObjIndex: vocObjIndex })
+  onVocObjClick = vocObj => {
+    console.log(`App.js onVocObjClick: ${vocObj.id}`)
+    this.setState({ selectVocObjId: vocObj.id })
   }
 
   onImgLoad = (width, height, fileSize) => {
@@ -152,21 +152,15 @@ class App extends Component {
   handleDeleteVocObjDialogClose = isDelete => {
     this.setState({ vocObjDeleteDialogOpen: false })
     if (isDelete) {
-      const {
-        selectVocObjIndex,
-        selectImgSet,
-        selectImgIndex,
-        vocObjChanged
-      } = this.state
-      console.log(`Delete voc object ${selectVocObjIndex}`)
+      const { selectVocObjId } = this.state
+      console.log(`Delete voc object ${selectVocObjId}`)
 
-      this.voc.deleteVocAnnoObjByIndex(selectVocObjIndex)
+      this.voc.deleteVocAnnoObjById(selectVocObjId)
 
-      if (selectVocObjIndex !== 0) {
-        this.setState({ selectVocObjIndex: selectVocObjIndex - 1 })
-      }
-
-      this.setState({ vocObjChanged: true })
+      this.setState({
+        vocObjChanged: true,
+        selectVocObjId: this.voc.curAnno.getNextObjId(selectVocObjId)
+      })
     }
   }
 
@@ -180,7 +174,7 @@ class App extends Component {
       selectImgHeight,
       selectImgWidth,
       selectImgSize,
-      selectVocObjIndex,
+      selectVocObjId,
       vocObjChanged
     } = this.state
 
@@ -219,14 +213,14 @@ class App extends Component {
             vocAnno={vocAnno}
             onMouseMove={this.onCanvasMouseMove}
             onImgLoad={this.onImgLoad}
-            selectVocObjIndex={selectVocObjIndex}
+            selectVocObjId={selectVocObjId}
           />
           <BottomBar mousePos={mousePos} />
         </main>
 
         <RightSideBar
           vocAnno={vocAnno}
-          selectVocObjIndex={selectVocObjIndex}
+          selectVocObjId={selectVocObjId}
           vocObjChanged={vocObjChanged}
           onVocObjClick={this.onVocObjClick}
           onDeleteVocObj={this.onDeleteVocObj}
