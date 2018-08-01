@@ -2,6 +2,8 @@ import xml2js from 'xml2js'
 import VocAnno from '../models/VocAnno'
 import path from 'path'
 import io from './io'
+import fs from 'fs'
+import _ from 'lodash'
 
 class ImageSets {
   constructor(name, imgNames) {
@@ -14,6 +16,7 @@ class ImageSets {
 class Voc {
   constructor(vocDir) {
     this.parser = new xml2js.Parser()
+    this.builder = new xml2js.Builder()
     this.rootDir = vocDir
 
     this.annoDir = path.join(vocDir, 'Annotations')
@@ -22,6 +25,10 @@ class Voc {
 
     this.imgSets = {}
     this._loadImageSets()
+
+    this.curImgSetName = ''
+    this.curImgIndex = 0
+    this.curAnno = null
   }
 
   getImgSetNames() {
@@ -49,20 +56,49 @@ class Voc {
     return path.join(this.imgDir, `${imgName}${suffix}`)
   }
 
-  getVocAnnoByIndex(imgSetName, index) {
-    const imgName = this.imgSets[imgSetName].imgNames[index]
-    const annoXmlPath = path.join(this.annoDir, `${imgName}.xml`)
-    const data = io.readFileSync(annoXmlPath)
-
-    let anno = null
-    this.parser.parseString(data, (err, result) => {
-      if (err) {
-        console.error(err)
-      } else {
-        anno = new VocAnno(result)
+  getVocAnnoByIndex(imgSetName, imgIndex) {
+    if (this.curImgSetName != imgSetName || this.curImgIndex != imgIndex) {
+      if (this.curImgSetName != imgSetName) {
+        this.curImgSetName = imgSetName
       }
+
+      if (this.curImgIndex != imgIndex) {
+        this.curImgIndex = imgIndex
+      }
+
+      const annoXmlPath = this._getAnnoXmlPath()
+      const data = io.readFileSync(annoXmlPath)
+
+      let anno = null
+      this.parser.parseString(data, (err, xmlJson) => {
+        if (err) {
+          console.error(err)
+        } else {
+          console.log(xmlJson)
+          anno = new VocAnno(xmlJson)
+          this.curAnno = anno
+        }
+      })
+      return anno
+    }
+
+    return this.curAnno
+  }
+
+  deleteVocAnnoObjByIndex(objIndex) {
+    this.curAnno.deleteObj(objIndex)
+  }
+
+  saveVocAnno() {
+    var xml = this.builder.buildObject(this.curAnno.getXmlJson())
+    fs.writeFile(this._getAnnoXmlPath(), xml, (err, data) => {
+      if (err) console.log(err)
     })
-    return anno
+  }
+
+  _getAnnoXmlPath() {
+    const imgName = this.imgSets[this.curImgSetName].imgNames[this.curImgIndex]
+    return path.join(this.annoDir, `${imgName}.xml`)
   }
 }
 

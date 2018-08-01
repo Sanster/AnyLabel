@@ -40,11 +40,18 @@ class RightSideBar extends React.Component {
     this.props.onVocObjClick(vocObjIndex)
   }
 
+  onKeyPress = event => {
+    if (event.key === 'Delete') {
+      this.props.onDeleteVocObj()
+    }
+  }
+
   render() {
     const { vocAnno, selectVocObjIndex, classes } = this.props
     let vocObjs = null
     if (vocAnno != null) {
-      vocObjs = vocAnno.objs
+      vocObjs = vocAnno.getObjs()
+      console.log(vocObjs)
     }
 
     return (
@@ -61,6 +68,7 @@ class RightSideBar extends React.Component {
                     key={index}
                     button
                     onClick={() => this.onVocObjClick(index)}
+                    onKeyPress={event => this.onKeyPress(event, index)}
                     className={
                       index === selectVocObjIndex
                         ? classes.listItemSelected

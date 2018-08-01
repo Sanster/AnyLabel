@@ -2,15 +2,18 @@ import React, { Component } from 'react'
 import Mousetrap from 'mousetrap'
 import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
-import TopBar from './components/TopBar'
 import Toolbar from '@material-ui/core/Toolbar'
+
+import TopBar from './components/TopBar'
 import LeftSideBar from './components/LeftSideBar'
 import RightSideBar from './components/RightSideBar'
 import CanvasView from './components/CanvasView'
 import BottomBar from './components/BottomBar'
 import Point from './models/Point'
 import Voc from './libs/Voc'
+import DeleteDialog from './components/dialogs/DeleteDialog'
 import './App.css'
+
 const ipcRenderer = window.require('electron').ipcRenderer
 
 const drawerWidth = 240
@@ -42,14 +45,14 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      voc: null,
       selectImgSet: '',
       selectImgIndex: 0,
       selectImgWidth: 0,
       selectImgHeight: 0,
       selectImgSize: 0,
       selectVocObjIndex: 0,
-      mousePos: new Point()
+      mousePos: new Point(),
+      vocObjDeleteDialogOpen: false
     }
 
     this.voc = null
@@ -87,16 +90,15 @@ class App extends Component {
 
   onVocDirSelected = vocDir => {
     const voc = new Voc(vocDir)
-    this.setState({ voc: voc }, () => {
-      const selectImgSet = voc.getImgSetNames()[0]
-      this.numImg = this.state.voc.getImgNames(selectImgSet).length
-      this.resetImgSet(selectImgSet)
-    })
+    this.voc = voc
+    const selectImgSet = voc.getImgSetNames()[0]
+    this.numImg = this.voc.getImgNames(selectImgSet).length
+    this.resetImgSet(selectImgSet)
   }
 
   onImgSetClick = imgSetName => {
     this.resetImgSet(imgSetName)
-    this.numImg = this.state.voc.getImgNames(imgSetName).length
+    this.numImg = this.voc.getImgNames(imgSetName).length
   }
 
   onImgNameClick = imgIndex => {
@@ -130,12 +132,29 @@ class App extends Component {
     }
   }
 
+  onDeleteVocObj = () => {
+    this.setState({ vocObjDeleteDialogOpen: true })
+  }
+
+  handleDeleteVocObjDialogClose = isDelete => {
+    this.setState({ vocObjDeleteDialogOpen: false })
+    if (isDelete) {
+      const { selectVocObjIndex, selectImgSet, selectImgIndex } = this.state
+      console.log(`Delete voc object ${selectVocObjIndex}`)
+
+      this.voc.deleteVocAnnoObjByIndex(selectVocObjIndex)
+
+      if (selectVocObjIndex !== 0) {
+        this.setState({ selectVocObjIndex: selectVocObjIndex - 1 })
+      }
+    }
+  }
+
   render() {
     const { classes } = this.props
 
     const {
       mousePos,
-      voc,
       selectImgSet,
       selectImgIndex,
       selectImgHeight,
@@ -148,11 +167,11 @@ class App extends Component {
     let vocAnno = null
     let imgNames = null
     let imgSets = null
-    if (voc != null && selectImgSet !== '') {
-      imgPath = voc.getImgPathByIndex(selectImgSet, selectImgIndex)
-      vocAnno = voc.getVocAnnoByIndex(selectImgSet, selectImgIndex)
-      imgSets = voc.getImgSetNames()
-      imgNames = voc.getImgNames(selectImgSet)
+    if (this.voc != null && selectImgSet !== '') {
+      imgPath = this.voc.getImgPathByIndex(selectImgSet, selectImgIndex)
+      vocAnno = this.voc.getVocAnnoByIndex(selectImgSet, selectImgIndex)
+      imgSets = this.voc.getImgSetNames()
+      imgNames = this.voc.getImgNames(selectImgSet)
     }
 
     return (
@@ -188,6 +207,12 @@ class App extends Component {
           vocAnno={vocAnno}
           selectVocObjIndex={selectVocObjIndex}
           onVocObjClick={this.onVocObjClick}
+          onDeleteVocObj={this.onDeleteVocObj}
+        />
+
+        <DeleteDialog
+          open={this.state.vocObjDeleteDialogOpen}
+          onClose={this.handleDeleteVocObjDialogClose}
         />
       </div>
     )
