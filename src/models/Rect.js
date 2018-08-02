@@ -8,6 +8,15 @@ class Rect {
     this.width = x2 - x1
     this.height = y2 - y1
   }
+
+  contain(point) {
+    return (
+      this.x1 < point.x &&
+      this.y1 < point.y &&
+      this.x2 > point.x &&
+      this.y2 > point.y
+    )
+  }
 }
 
 export default Rect

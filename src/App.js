@@ -83,6 +83,10 @@ class App extends Component {
     this.setState({ mousePos: _mousePos })
   }
 
+  onClickVocObjInCanvas = vocObj => {
+    this.setState({ selectVocObjId: vocObj.id })
+  }
+
   resetImgSet = imgSetName => {
     this.setState({
       selectImgIndex: 0,
@@ -216,6 +220,7 @@ class App extends Component {
             imgPath={imgPath}
             vocAnno={vocAnno}
             onMouseMove={this.onCanvasMouseMove}
+            onClickVocObjInCanvas={this.onClickVocObjInCanvas}
             onImgLoad={this.onImgLoad}
             selectVocObjId={selectVocObjId}
           />

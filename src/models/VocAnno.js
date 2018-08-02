@@ -79,6 +79,17 @@ class VocAnno {
       this.objs.set(index, new VocObj(obj.name[0], truncated, rect, index))
     })
   }
+
+  // 根据鼠标点击的位置找到第一个对应的标注框
+  searchObj(point) {
+    const objs = this.getObjs()
+    for (let i = 0; i < objs.length; i++) {
+      if (objs[i].rect.contain(point)) {
+        return objs[i]
+      }
+    }
+    return null
+  }
 }
 
 export default VocAnno

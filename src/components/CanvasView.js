@@ -109,9 +109,22 @@ class CanvasView extends React.Component {
   }
 
   handleMouseMove(e) {
+    const p = this.getCorrectXY(e)
+    this.props.onMouseMove(p.x, p.y)
+  }
+
+  handleMouseDown(e) {
+    const p = this.getCorrectXY(e)
+    const obj = this.anno.searchObj(p)
+    if (obj != null) {
+      this.props.onClickVocObjInCanvas(obj)
+    }
+  }
+
+  getCorrectXY(e) {
     const x = Math.ceil(this.scale * e.nativeEvent.offsetX)
     const y = Math.ceil(this.scale * e.nativeEvent.offsetY)
-    this.props.onMouseMove(x, y)
+    return new Point(x, y)
   }
 
   render() {
@@ -121,6 +134,7 @@ class CanvasView extends React.Component {
           id="canvas"
           ref="canvas"
           onMouseMove={e => this.handleMouseMove(e)}
+          onMouseDown={e => this.handleMouseDown(e)}
         />
       </div>
     )
