@@ -143,7 +143,9 @@ class LeftSideBar extends React.Component {
                           ? classes.listItemSelected
                           : classes.listItem
                       }
-                      onClick={() => this.onImgNameClick(index)}
+                      onClick={() =>
+                        this.onImgNameClick(index + page * rowsPerPage)
+                      }
                     >
                       <ListItemText primary={name} />
                     </ListItem>
