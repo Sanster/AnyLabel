@@ -13,7 +13,11 @@ import SideBar from './SideBar'
 import './LeftSideBar.css'
 
 const styles = theme => ({
-  listItemSelected: { background: '#e7e7e7' },
+  list: {
+    maxHeight: 800,
+    overflow: 'auto',
+    backgroundColor: theme.palette.background.paper
+  },
   listItem: {
     paddingTop: 6,
     paddingBottom: 6
@@ -60,7 +64,7 @@ class RightSideBar extends React.Component {
         <Grid container spacing={0} alignItems="stretch" direction="column">
           {vocObjs && (
             <Grid item>
-              <List dense subheader={<li />}>
+              <List dense subheader={<li />} className={classes.list}>
                 <ListHeader
                   text={`Labels(${vocObjs.length})`}
                   value={deletedObjCount}
