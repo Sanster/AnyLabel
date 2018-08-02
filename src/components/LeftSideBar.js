@@ -80,7 +80,6 @@ class LeftSideBar extends React.Component {
   }
 
   render() {
-    console.log('render leftsidebar')
     const {
       classes,
       selectImgSet,

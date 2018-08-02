@@ -289,6 +289,7 @@ class App extends Component {
             onClickVocObjInCanvas={this.onClickVocObjInCanvas}
             onImgLoad={this.onImgLoad}
             selectVocObjId={selectVocObjId}
+            onDeleteVocObj={this.onDeleteVocObj}
           />
           <BottomBar mousePos={mousePos} />
         </main>

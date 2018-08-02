@@ -25,7 +25,7 @@ class CanvasView extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    Logger.log('CanvasView componentWillReceiveProps')
+    // Logger.log('CanvasView componentWillReceiveProps')
     this.updateCanvas(props.imgPath, props.vocAnno, props.selectVocObjId)
   }
 
@@ -121,6 +121,12 @@ class CanvasView extends React.Component {
     }
   }
 
+  handleKeyDown(event) {
+    if (event.key === 'Delete') {
+      this.props.onDeleteVocObj()
+    }
+  }
+
   getCorrectXY(e) {
     const x = Math.ceil(this.scale * e.nativeEvent.offsetX)
     const y = Math.ceil(this.scale * e.nativeEvent.offsetY)
@@ -129,7 +135,12 @@ class CanvasView extends React.Component {
 
   render() {
     return (
-      <div className="canvas-wrapper">
+      <div
+        className="canvas-wrapper"
+        onKeyDown={e => this.handleKeyDown(e)}
+        // https://stackoverflow.com/questions/43503964/onkeydown-event-not-working-on-divs-in-react
+        tabIndex="0"
+      >
         <canvas
           id="canvas"
           ref="canvas"
