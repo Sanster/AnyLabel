@@ -61,6 +61,8 @@ class App extends Component {
 
     this.switchNextImg = false
     this.switchPrevImg = false
+    this.switchToImg = false
+    this.switchToImgIndex = 0
     this.voc = null
     this.numImg = 0
     this.bindKey()
@@ -124,10 +126,17 @@ class App extends Component {
   }
 
   onImgNameClick = imgIndex => {
-    this.setState({
-      selectImgIndex: imgIndex,
-      selectVocObjIndex: 0
-    })
+    const { vocObjChanged } = this.state
+    if (vocObjChanged) {
+      this.switchToImg = true
+      this.switchToImgIndex = imgIndex
+      this.setState({ switchImgDialogOpen: true })
+    } else {
+      this.setState({
+        selectImgIndex: imgIndex,
+        selectVocObjId: 0
+      })
+    }
   }
 
   onVocObjClick = vocObj => {
@@ -215,10 +224,18 @@ class App extends Component {
       if (this.switchPrevImg) {
         this.showPrevImg()
       }
+      if (this.switchToImg) {
+        this.setState({
+          selectImgIndex: this.switchToImgIndex,
+          selectVocObjId: 0,
+          vocObjChanged: false
+        })
+      }
     }
 
     this.switchNextImg = false
     this.switchPrevImg = false
+    this.switchToImg = false
   }
 
   render() {
