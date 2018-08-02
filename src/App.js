@@ -12,6 +12,7 @@ import BottomBar from './components/BottomBar'
 import Point from './models/Point'
 import Voc from './libs/Voc'
 import DeleteDialog from './components/dialogs/DeleteDialog'
+import SwitchImgDialog from './components/dialogs/SwitchImgDialog'
 import './App.css'
 
 const ipcRenderer = window.require('electron').ipcRenderer
@@ -53,10 +54,13 @@ class App extends Component {
       selectVocObjId: 0,
       mousePos: new Point(),
       vocObjDeleteDialogOpen: false,
+      switchImgDialogOpen: false,
       vocObjChanged: false, // Object 是否有删除或添加
       imgSetChanged: false // 图片集合是否有删除
     }
 
+    this.switchNextImg = false
+    this.switchPrevImg = false
     this.voc = null
     this.numImg = 0
     this.bindKey()
@@ -64,8 +68,8 @@ class App extends Component {
   }
 
   bindKey = () => {
-    Mousetrap.bind('left', this.showPrevImg)
-    Mousetrap.bind('right', this.showNextImg)
+    Mousetrap.bind('left', this.onLeftKeyPress)
+    Mousetrap.bind('right', this.onRightKeyPress)
     Mousetrap.bind('ctrl+s', this.saveVocAnno)
   }
 
@@ -139,17 +143,47 @@ class App extends Component {
     })
   }
 
+  onRightKeyPress = () => {
+    const { selectImgIndex, vocObjChanged } = this.state
+    if (selectImgIndex < this.numImg - 1) {
+      if (vocObjChanged) {
+        this.switchNextImg = true
+        this.setState({ switchImgDialogOpen: true })
+      } else {
+        this.showNextImg()
+      }
+    }
+  }
+
+  onLeftKeyPress = () => {
+    const { selectImgIndex, vocObjChanged } = this.state
+    if (selectImgIndex >= 1) {
+      if (vocObjChanged) {
+        this.switchPrevImg = true
+        this.setState({ switchImgDialogOpen: true })
+      } else {
+        this.showPrevImg()
+      }
+    }
+  }
+
   showNextImg = () => {
     const { selectImgIndex } = this.state
     if (selectImgIndex < this.numImg - 1) {
-      this.setState({ selectImgIndex: selectImgIndex + 1 })
+      this.setState({
+        selectImgIndex: selectImgIndex + 1,
+        vocObjChanged: false
+      })
     }
   }
 
   showPrevImg = () => {
     const { selectImgIndex } = this.state
     if (selectImgIndex >= 1) {
-      this.setState({ selectImgIndex: selectImgIndex - 1 })
+      this.setState({
+        selectImgIndex: selectImgIndex - 1,
+        vocObjChanged: false
+      })
     }
   }
 
@@ -170,6 +204,21 @@ class App extends Component {
         selectVocObjId: this.voc.curAnno.getNextObjId(selectVocObjId)
       })
     }
+  }
+
+  handleSwitchImgDialogClose = isOk => {
+    this.setState({ switchImgDialogOpen: false })
+    if (isOk) {
+      if (this.switchNextImg) {
+        this.showNextImg()
+      }
+      if (this.switchPrevImg) {
+        this.showPrevImg()
+      }
+    }
+
+    this.switchNextImg = false
+    this.switchPrevImg = false
   }
 
   render() {
@@ -238,6 +287,11 @@ class App extends Component {
         <DeleteDialog
           open={this.state.vocObjDeleteDialogOpen}
           onClose={this.handleDeleteVocObjDialogClose}
+        />
+
+        <SwitchImgDialog
+          open={this.state.switchImgDialogOpen}
+          onClose={this.handleSwitchImgDialogClose}
         />
       </div>
     )
