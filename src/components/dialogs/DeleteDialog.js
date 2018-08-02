@@ -35,7 +35,7 @@ class DeleteDialog extends React.Component {
           <Button onClick={this.handleCancel} color="primary">
             Cancel
           </Button>
-          <Button onClick={this.handleOk} color="primary">
+          <Button onClick={this.handleOk} color="primary" autoFocus>
             Ok
           </Button>
         </DialogActions>
