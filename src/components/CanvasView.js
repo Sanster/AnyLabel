@@ -109,7 +109,9 @@ class CanvasView extends React.Component {
   }
 
   handleMouseMove(e) {
-    this.props.onMouseMove(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+    const x = Math.ceil(this.scale * e.nativeEvent.offsetX)
+    const y = Math.ceil(this.scale * e.nativeEvent.offsetY)
+    this.props.onMouseMove(x, y)
   }
 
   render() {
