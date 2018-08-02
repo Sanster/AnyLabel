@@ -1,4 +1,5 @@
 import path from 'path'
+import { write } from 'fs'
 const electron = window.require('electron')
 const fs = electron.remote.require('fs')
 
@@ -29,12 +30,17 @@ function fileSize(filePath) {
   return Math.ceil(fileSizeInBytes / 1024.0)
 }
 
+function writeFileSync(filePath, data) {
+  fs.writeFileSync(filePath, data)
+}
+
 const io = {
   exists: exists,
   listDir: listDir,
   readLines: readLines,
   readFileSync: readFileSync,
-  fileSize: fileSize
+  fileSize: fileSize,
+  writeFileSync: writeFileSync
 }
 
 export default io

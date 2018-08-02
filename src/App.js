@@ -95,6 +95,10 @@ class App extends Component {
     const { vocObjChanged, imgSetChanged } = this.state
     if (vocObjChanged || imgSetChanged) {
       this.voc.saveVocAnno()
+      this.setState({
+        vocObjChanged: false,
+        imgSetChanged: false
+      })
     }
   }
 

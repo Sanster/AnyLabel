@@ -7,7 +7,7 @@ class VocAnno {
     // 保存 xml2js 原始解析结果
     this.xmlJson = xmlJson
 
-    this._parseXmlJson()
+    this.parseXmlJson()
   }
 
   _init() {
@@ -64,7 +64,7 @@ class VocAnno {
   }
 
   // 每次解析 xmlJson，相当于初始化
-  _parseXmlJson() {
+  parseXmlJson() {
     this._init()
 
     const annotation = this.xmlJson.annotation

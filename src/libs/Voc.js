@@ -2,7 +2,6 @@ import xml2js from 'xml2js'
 import VocAnno from '../models/VocAnno'
 import path from 'path'
 import io from './io'
-import fs from 'fs'
 import _ from 'lodash'
 
 class ImageSets {
@@ -91,9 +90,9 @@ class Voc {
 
   saveVocAnno() {
     var xml = this.builder.buildObject(this.curAnno.getXmlJson())
-    fs.writeFile(this._getAnnoXmlPath(), xml, (err, data) => {
-      if (err) console.log(err)
-    })
+    io.writeFileSync(this._getAnnoXmlPath(), xml)
+    // 每次读取保存完成后重新读取，清空状态
+    this.curAnno.parseXmlJson()
   }
 
   _getAnnoXmlPath() {
