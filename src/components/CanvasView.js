@@ -14,19 +14,49 @@ class CanvasView extends React.Component {
     this.MAX_WIDTH = 750
     this.MAX_HEIGHT = 600
     this.img = null
-    this.imgPath = null
-    this.selectVocObjId = props.selectVocObjId
+
+    this.state = {
+      imgPath: '',
+      selectVocObjId: -1
+    }
   }
 
   componentDidMount() {
-    Logger.log('componentDidMount')
     this.canvas = new Canvas(this.refs.canvas)
     this.updateCanvas(this.props.imgPath, this.props.vocAnno)
   }
 
-  componentWillReceiveProps(props) {
-    // Logger.log('CanvasView componentWillReceiveProps')
-    this.updateCanvas(props.imgPath, props.vocAnno, props.selectVocObjId)
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      nextProps.imgPath === this.state.imgPath &&
+      nextProps.selectVocObjId === thist.state.selectVocObjId
+    ) {
+      return false
+    }
+    return true
+  }
+
+  updateCanvas(imgPath, anno, selectVocObjId) {
+    if (!io.exists(imgPath)) return
+
+    if (this.img == null || imgPath !== this.imgPath) {
+      this.anno = anno
+      this.imgPath = imgPath
+
+      Logger.log(`Load image: ${imgPath}`)
+      const img = new Image()
+      img.onload = e => {
+        this.img = img
+        this.onImgLoad()
+      }
+      img.src = new URL('file://' + imgPath)
+    }
+
+    if (selectVocObjId != this.selectVocObjId) {
+      this.selectVocObjId = selectVocObjId
+      this.canvas.drawImage(this.img, this.sWidth, this.sHeight)
+      this.drawAnno(this.anno)
+    }
   }
 
   drawAnno(anno) {
@@ -73,29 +103,6 @@ class CanvasView extends React.Component {
 
     const fileSize = io.fileSize(this.imgPath)
     this.props.onImgLoad(this.img.width, this.img.height, fileSize)
-  }
-
-  updateCanvas(imgPath, anno, selectVocObjId) {
-    if (!io.exists(imgPath)) return
-
-    if (this.img == null || imgPath !== this.imgPath) {
-      this.anno = anno
-      this.imgPath = imgPath
-
-      Logger.log(`Load image: ${imgPath}`)
-      const img = new Image()
-      img.onload = e => {
-        this.img = img
-        this.onImgLoad()
-      }
-      img.src = new URL('file://' + imgPath)
-    }
-
-    if (selectVocObjId != this.selectVocObjId) {
-      this.selectVocObjId = selectVocObjId
-      this.canvas.drawImage(this.img, this.sWidth, this.sHeight)
-      this.drawAnno(this.anno)
-    }
   }
 
   drawImg() {

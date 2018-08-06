@@ -36,6 +36,8 @@ const styles = theme => ({
     width: drawerWidth
   },
   content: {
+    marginTop: 50,
+    paddingBottom: 28,
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     position: 'relative'
