@@ -19,7 +19,6 @@ class CanvasView extends React.Component {
 
     this.anno = null
     this.imgPath = ''
-    this.selectVocObjId = -1
     this.imageNode = null
 
     this.scaledImgWidth = 0
@@ -28,6 +27,7 @@ class CanvasView extends React.Component {
     this.image = new window.Image()
 
     this.state = {
+      selectVocObjId: -1,
       stageHeight: 0,
       stageWidth: 0
     }
@@ -51,11 +51,16 @@ class CanvasView extends React.Component {
 
   componentWillReceiveProps(nextProps, nextState) {
     // console.log('componentWillReceiveProps')
+    if (nextProps.imgPath !== this.imgPath) {
+      this.updateCanvas(nextProps)
+      return
+    }
+
     if (
-      nextProps.imgPath !== this.imgPath ||
+      nextProps.imgPath === this.imgPath &&
       nextProps.selectVocObjId !== this.selectVocObjId
     ) {
-      this.updateCanvas(nextProps)
+      this.updateAnnos(nextProps)
     }
   }
 
@@ -70,9 +75,14 @@ class CanvasView extends React.Component {
 
     this.anno = vocAnno
     this.imgPath = imgPath
-    this.selectVocObjId = selectVocObjId
+    this.setState({ selectVocObjId })
 
     this.image.src = new URL('file://' + imgPath)
+  }
+
+  // 不重新读取图片只重绘 anno
+  updateAnnos(props) {
+    this.setState({ selectVocObjId: props.selectVocObjId })
   }
 
   findBestImgSize(img) {
@@ -91,7 +101,7 @@ class CanvasView extends React.Component {
   }
 
   onImgLoad() {
-    // console.log('onImgLoad')
+    console.log('onImgLoad')
 
     this.findBestImgSize(this.image)
 
@@ -130,12 +140,10 @@ class CanvasView extends React.Component {
     return new Point(x, y)
   }
 
-  renderObjs(imgLeft, imgTop) {
+  renderObjs(imgLeft, imgTop, selectVocObjId) {
     if (this.anno === null) return null
 
     const objs = this.anno.getObjs()
-    console.log('renderObjs')
-    console.log(objs)
 
     return objs.map(n => (
       <CRect
@@ -144,18 +152,17 @@ class CanvasView extends React.Component {
         y={imgTop + n.rect.y1 / this.scale}
         width={n.rect.width / this.scale}
         height={n.rect.height / this.scale}
-        selected={n.id === this.selectVocObjId}
+        selected={n.id === selectVocObjId}
       />
     ))
   }
 
   render() {
-    const { stageHeight, stageWidth } = this.state
+    const { stageHeight, stageWidth, selectVocObjId } = this.state
     const imgLeft = (stageWidth - this.scaledImgWidth) / 2
     const imgTop = (stageHeight - this.scaledImgHeight) / 2
 
-    const objCRects = this.renderObjs(imgLeft, imgTop)
-    console.log(objCRects)
+    const objCRects = this.renderObjs(imgLeft, imgTop, selectVocObjId)
 
     return (
       <div
