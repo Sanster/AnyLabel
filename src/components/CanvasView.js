@@ -111,13 +111,10 @@ class CanvasView extends React.Component {
     this.props.onImgLoad(this.image.width, this.image.height, fileSize)
   }
 
-  getPoint(e) {
-    return new Point(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
-  }
-
-  handleMouseMove(e) {
-    const p = this.getCorrectXY(e)
-    this.props.onMouseMove(p.x, p.y)
+  handleMouseMove = (e, imgLeft, imgTop) => {
+    const x = Math.ceil(this.scale * (e.evt.layerX - imgLeft))
+    const y = Math.ceil(this.scale * (e.evt.layerY - imgTop))
+    this.props.onMouseMove(x, y)
   }
 
   handleMouseDown(e) {
@@ -132,12 +129,6 @@ class CanvasView extends React.Component {
     if (event.key === 'Delete') {
       this.props.onDeleteVocObj()
     }
-  }
-
-  getCorrectXY(e) {
-    const x = Math.ceil(this.scale * e.nativeEvent.offsetX)
-    const y = Math.ceil(this.scale * e.nativeEvent.offsetY)
-    return new Point(x, y)
   }
 
   renderObjs(imgLeft, imgTop, selectVocObjId) {
@@ -181,6 +172,7 @@ class CanvasView extends React.Component {
               width={this.scaledImgWidth}
               height={this.scaledImgHeight}
               ref="imageNode"
+              onMouseMove={e => this.handleMouseMove(e, imgLeft, imgTop)}
             />
             {objCRects}
           </Layer>
