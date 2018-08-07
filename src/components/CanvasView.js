@@ -8,55 +8,65 @@ import Logger from '../libs/Logger'
 import Canvas from '../libs/Canvas'
 import io from '../libs/io'
 
+import { Stage, Layer, Image } from 'react-konva'
+
 class CanvasView extends React.Component {
   constructor(props) {
     super(props)
     this.MAX_WIDTH = 750
     this.MAX_HEIGHT = 600
-    this.img = null
+    this.imgPath = ''
+    this.selectVocObjId = -1
+    this.imageNode = null
+    this.sWidth = 0
+    this.sHeight = 0
+    this.scale = 1
 
     this.state = {
-      imgPath: '',
-      selectVocObjId: -1
+      image: new window.Image(),
+      stageHeight: 0,
+      stageWidth: 0
     }
   }
 
   componentDidMount() {
-    this.canvas = new Canvas(this.refs.canvas)
-    this.updateCanvas(this.props.imgPath, this.props.vocAnno)
+    // this.canvas = new Canvas(this.refs.canvas)
+    this.imageNode = this.refs.imageNode
+    this.canvasWrapper = this.refs.canvasWrapper
+    this.setState({
+      stageHeight: this.canvasWrapper.clientHeight,
+      stageWidth: this.canvasWrapper.clientWidth
+    })
+    this.updateCanvas()
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     if (
-      nextProps.imgPath === this.state.imgPath &&
-      nextProps.selectVocObjId === thist.state.selectVocObjId
+      nextProps.imgPath === this.imgPath &&
+      nextProps.selectVocObjId === this.selectVocObjId
     ) {
       return false
     }
     return true
   }
 
-  updateCanvas(imgPath, anno, selectVocObjId) {
+  updateCanvas() {
+    const { imgPath, anno, selectVocObjId } = this.props
+
     if (!io.exists(imgPath)) return
 
-    if (this.img == null || imgPath !== this.imgPath) {
-      this.anno = anno
-      this.imgPath = imgPath
+    this.anno = anno
+    this.imgPath = imgPath
+    this.selectVocObjId = selectVocObjId
 
-      Logger.log(`Load image: ${imgPath}`)
-      const img = new Image()
-      img.onload = e => {
-        this.img = img
-        this.onImgLoad()
-      }
-      img.src = new URL('file://' + imgPath)
+    this.state.image.src = new URL('file://' + imgPath)
+    this.state.image.onload = () => {
+      this.imageNode.getLayer().batchDraw()
+      this.onImgLoad()
     }
 
-    if (selectVocObjId != this.selectVocObjId) {
-      this.selectVocObjId = selectVocObjId
-      this.canvas.drawImage(this.img, this.sWidth, this.sHeight)
-      this.drawAnno(this.anno)
-    }
+    // this.canvas.drawImage(this.img, this.sWidth, this.sHeight)
+    // this.drawAnno(this.anno)
   }
 
   drawAnno(anno) {
@@ -85,24 +95,25 @@ class CanvasView extends React.Component {
     this.sWidth = img.width / this.scale
     this.sHeight = img.height / this.scale
 
-    this.canvas.setWidth(this.sWidth)
-    this.canvas.setHeight(this.sHeight)
+    // this.canvas.setWidth(this.sWidth)
+    // this.canvas.setHeight(this.sHeight)
 
-    // strokeStype will be reset after set width/height
-    // so we need to reset here
-    this.canvas.setStrokeColor(0, 255, 0)
-    this.canvas.setFillColor(0, 0, 255)
-    this.canvas.setLineWidth(2)
+    // // strokeStype will be reset after set width/height
+    // // so we need to reset here
+    // this.canvas.setStrokeColor(0, 255, 0)
+    // this.canvas.setFillColor(0, 0, 255)
+    // this.canvas.setLineWidth(2)
   }
 
   onImgLoad() {
-    this.findBestImgSize(this.img)
+    const { image } = this.state
+    this.findBestImgSize(image)
 
-    this.canvas.drawImage(this.img, this.sWidth, this.sHeight)
+    this.canvas.drawImage(image, this.sWidth, this.sHeight)
     this.drawAnno(this.anno)
 
     const fileSize = io.fileSize(this.imgPath)
-    this.props.onImgLoad(this.img.width, this.img.height, fileSize)
+    this.props.onImgLoad(image.width, image.height, fileSize)
   }
 
   drawImg() {
@@ -141,19 +152,29 @@ class CanvasView extends React.Component {
   }
 
   render() {
+    const { image, stageHeight, stageWidth } = this.state
+    const x = 0
+    const y = 0
     return (
       <div
         className="canvas-wrapper"
+        ref="canvasWrapper"
         onKeyDown={e => this.handleKeyDown(e)}
         // https://stackoverflow.com/questions/43503964/onkeydown-event-not-working-on-divs-in-react
         tabIndex="0"
       >
-        <canvas
-          id="canvas"
-          ref="canvas"
-          onMouseMove={e => this.handleMouseMove(e)}
-          onMouseDown={e => this.handleMouseDown(e)}
-        />
+        <Stage width={stageWidth} height={stageHeight}>
+          <Layer>
+            <Image
+              image={image}
+              x={x}
+              y={y}
+              width={this.sWidth}
+              height={this.sHeight}
+              ref="imageNode"
+            />
+          </Layer>
+        </Stage>
       </div>
     )
   }
