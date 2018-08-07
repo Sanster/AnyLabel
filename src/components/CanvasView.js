@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Stage, Layer, Image } from 'react-konva'
 
 import Rect from '../models/Rect'
 import Point from '../models/Point'
@@ -8,18 +9,21 @@ import Logger from '../libs/Logger'
 import Canvas from '../libs/Canvas'
 import io from '../libs/io'
 
-import { Stage, Layer, Image } from 'react-konva'
+import CRect from './shapes/CRect'
 
 class CanvasView extends React.Component {
   constructor(props) {
     super(props)
     this.MAX_WIDTH = 750
     this.MAX_HEIGHT = 600
+
+    this.anno = null
     this.imgPath = ''
     this.selectVocObjId = -1
     this.imageNode = null
-    this.sWidth = 0
-    this.sHeight = 0
+
+    this.scaledImgWidth = 0
+    this.scaledImgHeight = 0
     this.scale = 1
     this.image = new window.Image()
 
@@ -57,33 +61,18 @@ class CanvasView extends React.Component {
 
   updateCanvas(props) {
     // console.log('updateCanvas')
-    const { imgPath, anno, selectVocObjId } = props
+    const { imgPath, vocAnno, selectVocObjId } = props
 
     if (!io.exists(imgPath)) {
       console.log(`imgPath not exists: ${imgPath}`)
       return
     }
 
-    this.anno = anno
+    this.anno = vocAnno
     this.imgPath = imgPath
     this.selectVocObjId = selectVocObjId
 
     this.image.src = new URL('file://' + imgPath)
-
-    // this.canvas.drawImage(this.img, this.sWidth, this.sHeight)
-    // this.drawAnno(this.anno)
-  }
-
-  drawAnno(anno) {
-    if (anno == null) return
-
-    anno.getObjs().forEach((obj, index) => {
-      if (obj.id === this.selectVocObjId) {
-        this.canvas.drawRect(obj.rect, this.scale, true)
-      }
-
-      this.canvas.drawRect(obj.rect, this.scale)
-    })
   }
 
   findBestImgSize(img) {
@@ -97,21 +86,12 @@ class CanvasView extends React.Component {
     }
 
     this.scale = Math.max(wScale, hScale)
-    this.sWidth = img.width / this.scale
-    this.sHeight = img.height / this.scale
-
-    // this.canvas.setWidth(this.sWidth)
-    // this.canvas.setHeight(this.sHeight)
-
-    // // strokeStype will be reset after set width/height
-    // // so we need to reset here
-    // this.canvas.setStrokeColor(0, 255, 0)
-    // this.canvas.setFillColor(0, 0, 255)
-    // this.canvas.setLineWidth(2)
+    this.scaledImgWidth = img.width / this.scale
+    this.scaledImgHeight = img.height / this.scale
   }
 
   onImgLoad() {
-    console.log('onImgLoad')
+    // console.log('onImgLoad')
 
     this.findBestImgSize(this.image)
 
@@ -150,10 +130,33 @@ class CanvasView extends React.Component {
     return new Point(x, y)
   }
 
+  renderObjs(imgLeft, imgTop) {
+    if (this.anno === null) return null
+
+    const objs = this.anno.getObjs()
+    console.log('renderObjs')
+    console.log(objs)
+
+    return objs.map(n => (
+      <CRect
+        key={n.id}
+        x={imgLeft + n.rect.x1 / this.scale}
+        y={imgTop + n.rect.y1 / this.scale}
+        width={n.rect.width / this.scale}
+        height={n.rect.height / this.scale}
+        selected={n.id === this.selectVocObjId}
+      />
+    ))
+  }
+
   render() {
     const { stageHeight, stageWidth } = this.state
-    const x = 0
-    const y = 0
+    const imgLeft = (stageWidth - this.scaledImgWidth) / 2
+    const imgTop = (stageHeight - this.scaledImgHeight) / 2
+
+    const objCRects = this.renderObjs(imgLeft, imgTop)
+    console.log(objCRects)
+
     return (
       <div
         className="canvas-wrapper"
@@ -166,12 +169,13 @@ class CanvasView extends React.Component {
           <Layer>
             <Image
               image={this.image}
-              x={x}
-              y={y}
-              width={this.sWidth}
-              height={this.sHeight}
+              x={imgLeft}
+              y={imgTop}
+              width={this.scaledImgWidth}
+              height={this.scaledImgHeight}
               ref="imageNode"
             />
+            {objCRects}
           </Layer>
         </Stage>
       </div>
