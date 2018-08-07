@@ -207,8 +207,8 @@ LeftSideBar.propTypes = {
   selectImgIndex: PropTypes.number.isRequired,
   selectImgHeight: PropTypes.number.isRequired,
   selectImgWidth: PropTypes.number.isRequired,
-  imgNames: PropTypes.array.isRequired,
-  imgSets: PropTypes.array.isRequired
+  imgNames: PropTypes.array,
+  imgSets: PropTypes.array
 }
 
 export default withStyles(styles)(LeftSideBar)
