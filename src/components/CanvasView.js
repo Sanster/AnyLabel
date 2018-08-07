@@ -10,6 +10,7 @@ import Canvas from '../libs/Canvas'
 import io from '../libs/io'
 
 import CRect from './shapes/CRect'
+import TransformerComponent from './shapes/Transformer'
 
 class CanvasView extends React.Component {
   constructor(props) {
@@ -62,6 +63,55 @@ class CanvasView extends React.Component {
     ) {
       this.updateAnnos(nextProps)
     }
+  }
+
+  handleStageMouseDown = e => {
+    console.log('handleStageMouseDown')
+    if (e.target === e.target.getStage()) {
+      this.props.onClickVocObjInCanvas(null)
+      console.log('clicked on stage clear selection')
+      return
+    }
+
+    const clickedOnTransformer =
+      e.target.getParent().className === 'Transformer'
+    if (clickedOnTransformer) {
+      console.log('click on transformer do nothing')
+      return
+    }
+
+    // find clicked rect by its name
+    const name = e.target.name()
+    const objs = this.anno.getObjs()
+
+    const obj = objs.find(n => n.name === name)
+
+    if (obj) {
+      this.props.onClickVocObjInCanvas(obj)
+    } else {
+      this.props.onClickVocObjInCanvas(null)
+    }
+  }
+
+  handleRectChange = (id, newRect, imgLeft, imgTop) => {
+    console.log('handleRectChange')
+
+    const x = parseInt((newRect.x - imgLeft) * this.scale)
+    const y = parseInt((newRect.y - imgTop) * this.scale)
+    const width = parseInt(newRect.width * this.scale)
+    const height = parseInt(newRect.height * this.scale)
+
+    this.anno.objs.get(id).rect = new Rect(x, y, x + width, y + height)
+
+    this.updateAnnos(this.props)
+
+    // const rectangles = this.state.rectangles.concat();
+    // rectangles[index] = {
+    //   ...rectangles[index],
+    //   ...newProps
+    // };
+
+    // this.setState({ rectangles });
   }
 
   updateCanvas(props) {
@@ -139,11 +189,15 @@ class CanvasView extends React.Component {
     return objs.map(n => (
       <CRect
         key={n.id}
+        name={n.name}
         x={imgLeft + n.rect.x1 / this.scale}
         y={imgTop + n.rect.y1 / this.scale}
         width={n.rect.width / this.scale}
         height={n.rect.height / this.scale}
         selected={n.id === selectVocObjId}
+        onTransform={newRect => {
+          this.handleRectChange(n.id, newRect, imgLeft, imgTop)
+        }}
       />
     ))
   }
@@ -163,7 +217,11 @@ class CanvasView extends React.Component {
         // https://stackoverflow.com/questions/43503964/onkeydown-event-not-working-on-divs-in-react
         tabIndex="0"
       >
-        <Stage width={stageWidth} height={stageHeight}>
+        <Stage
+          width={stageWidth}
+          height={stageHeight}
+          onMouseDown={this.handleStageMouseDown}
+        >
           <Layer>
             <Image
               image={this.image}
@@ -175,6 +233,7 @@ class CanvasView extends React.Component {
               onMouseMove={e => this.handleMouseMove(e, imgLeft, imgTop)}
             />
             {objCRects}
+            <TransformerComponent selectedShapeName={selectVocObjId} />
           </Layer>
         </Stage>
       </div>

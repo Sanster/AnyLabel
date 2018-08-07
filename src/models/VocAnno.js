@@ -12,6 +12,7 @@ class VocAnno {
 
   _init() {
     this.objs = new Map()
+    this.unSavedObjs = new Map()
     // Image size
     this.size = null
     this.filename = ''

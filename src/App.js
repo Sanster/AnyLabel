@@ -92,7 +92,11 @@ class App extends Component {
   }
 
   onClickVocObjInCanvas = vocObj => {
-    this.setState({ selectVocObjId: vocObj.id })
+    if (vocObj) {
+      this.setState({ selectVocObjId: vocObj.id })
+    } else {
+      this.setState({ selectVocObjId: -1 })
+    }
   }
 
   resetImgSet = imgSetName => {
