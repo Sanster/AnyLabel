@@ -21,49 +21,54 @@ class CanvasView extends React.Component {
     this.sWidth = 0
     this.sHeight = 0
     this.scale = 1
+    this.image = new window.Image()
 
     this.state = {
-      image: new window.Image(),
       stageHeight: 0,
       stageWidth: 0
     }
   }
 
   componentDidMount() {
-    // this.canvas = new Canvas(this.refs.canvas)
     this.imageNode = this.refs.imageNode
     this.canvasWrapper = this.refs.canvasWrapper
+
     this.setState({
       stageHeight: this.canvasWrapper.clientHeight,
       stageWidth: this.canvasWrapper.clientWidth
     })
-    this.updateCanvas()
-  }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (
-      nextProps.imgPath === this.imgPath &&
-      nextProps.selectVocObjId === this.selectVocObjId
-    ) {
-      return false
+    this.image.onload = () => {
+      this.onImgLoad()
     }
-    return true
+
+    this.updateCanvas(this.props)
   }
 
-  updateCanvas() {
-    const { imgPath, anno, selectVocObjId } = this.props
+  componentWillReceiveProps(nextProps, nextState) {
+    // console.log('componentWillReceiveProps')
+    if (
+      nextProps.imgPath !== this.imgPath ||
+      nextProps.selectVocObjId !== this.selectVocObjId
+    ) {
+      this.updateCanvas(nextProps)
+    }
+  }
 
-    if (!io.exists(imgPath)) return
+  updateCanvas(props) {
+    // console.log('updateCanvas')
+    const { imgPath, anno, selectVocObjId } = props
+
+    if (!io.exists(imgPath)) {
+      console.log(`imgPath not exists: ${imgPath}`)
+      return
+    }
 
     this.anno = anno
     this.imgPath = imgPath
     this.selectVocObjId = selectVocObjId
 
-    this.state.image.src = new URL('file://' + imgPath)
-    this.state.image.onload = () => {
-      this.imageNode.getLayer().batchDraw()
-      this.onImgLoad()
-    }
+    this.image.src = new URL('file://' + imgPath)
 
     // this.canvas.drawImage(this.img, this.sWidth, this.sHeight)
     // this.drawAnno(this.anno)
@@ -106,20 +111,14 @@ class CanvasView extends React.Component {
   }
 
   onImgLoad() {
-    const { image } = this.state
-    this.findBestImgSize(image)
+    console.log('onImgLoad')
 
-    this.canvas.drawImage(image, this.sWidth, this.sHeight)
-    this.drawAnno(this.anno)
+    this.findBestImgSize(this.image)
+
+    this.imageNode.getLayer().batchDraw()
 
     const fileSize = io.fileSize(this.imgPath)
-    this.props.onImgLoad(image.width, image.height, fileSize)
-  }
-
-  drawImg() {
-    if (this.img != null) {
-      this.canvas.drawImage(this.img, this.sWidth, this.sHeight)
-    }
+    this.props.onImgLoad(this.image.width, this.image.height, fileSize)
   }
 
   getPoint(e) {
@@ -152,7 +151,7 @@ class CanvasView extends React.Component {
   }
 
   render() {
-    const { image, stageHeight, stageWidth } = this.state
+    const { stageHeight, stageWidth } = this.state
     const x = 0
     const y = 0
     return (
@@ -166,7 +165,7 @@ class CanvasView extends React.Component {
         <Stage width={stageWidth} height={stageHeight}>
           <Layer>
             <Image
-              image={image}
+              image={this.image}
               x={x}
               y={y}
               width={this.sWidth}
